@@ -8,6 +8,7 @@ namespace PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstrac
 
 public interface IMongoDbContext
 {
-
+    public bool IsMongoActive();
+    // IMongoCollection<Type> Name {get;}
 }
 
