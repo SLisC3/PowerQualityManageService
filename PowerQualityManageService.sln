@@ -5,11 +5,9 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerQualityManageService", "PowerQualityManageService\PowerQualityManageService.csproj", "{CDE8359D-C264-4EAA-8D7C-EC21E6074E56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerQualityManageService.Application", "PowerQualityManageService.Application\PowerQualityManageService.Application.csproj", "{52696DD5-94FA-4712-A743-EE3951E6D9E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerQualityManageService.Application", "PowerQualityManageService.Application\PowerQualityManageService.Application.csproj", "{52696DD5-94FA-4712-A743-EE3951E6D9E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerQualityManageService.Domain", "PowerQualityManageService.Domain\PowerQualityManageService.Domain.csproj", "{5FBBE061-CC5F-4D26-A098-DADCDFC773C7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerQualityManageService.Infrastructure", "PowerQualityManageService.Infrastructure\PowerQualityManageService.Infrastructure.csproj", "{96BE4107-CC56-49F5-926B-7FB396914313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerQualityManageService.Infrastructure", "PowerQualityManageService.Infrastructure\PowerQualityManageService.Infrastructure.csproj", "{96BE4107-CC56-49F5-926B-7FB396914313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{52696DD5-94FA-4712-A743-EE3951E6D9E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52696DD5-94FA-4712-A743-EE3951E6D9E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52696DD5-94FA-4712-A743-EE3951E6D9E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FBBE061-CC5F-4D26-A098-DADCDFC773C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FBBE061-CC5F-4D26-A098-DADCDFC773C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FBBE061-CC5F-4D26-A098-DADCDFC773C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FBBE061-CC5F-4D26-A098-DADCDFC773C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96BE4107-CC56-49F5-926B-7FB396914313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96BE4107-CC56-49F5-926B-7FB396914313}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96BE4107-CC56-49F5-926B-7FB396914313}.Release|Any CPU.ActiveCfg = Release|Any CPU
