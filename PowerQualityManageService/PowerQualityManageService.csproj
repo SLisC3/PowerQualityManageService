@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PowerQualityManageService.Application\PowerQualityManageService.Application.csproj" />
+    <ProjectReference Include="..\PowerQualityManageService.Infrastructure\PowerQualityManageService.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
