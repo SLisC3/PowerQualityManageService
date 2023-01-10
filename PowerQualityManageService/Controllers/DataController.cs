@@ -2,9 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace PowerQualityManageService.Controllers;
+
+[ApiController]
+[Route("[controller]")]
 public class DataController : Controller
 {
-    // GET: DataController
+    
+    [HttpGet]
     public ActionResult Index()
     {
         return View();
@@ -12,16 +16,19 @@ public class DataController : Controller
 
     // POST: DataController/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Create(IFormCollection collection)
+    [Route("Upload")]
+    public ActionResult Create(IFormFile file)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
+
+        return Ok();
+
+        //try
+        //{
+        //    return RedirectToAction(nameof(Index));
+        //}
+        //catch
+        //{
+        //    return View();
+        //}
     }
 }
