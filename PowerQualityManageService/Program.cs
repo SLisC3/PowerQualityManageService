@@ -1,4 +1,5 @@
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,11 @@ builder.Services.AddControllers()
         options => options.JsonSerializerOptions.PropertyNamingPolicy = null); ;
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o=>
+{
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    //o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+});
 
 var app = builder.Build();
 
@@ -28,4 +33,5 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapControllers();
 app.Run();
