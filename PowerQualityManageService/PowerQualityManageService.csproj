@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PowerQualityManageService.Application\PowerQualityManageService.Application.csproj" />
+    <ProjectReference Include="..\PowerQualityManageService.Application\PowerQualityManageService.Domain.csproj" />
     <ProjectReference Include="..\PowerQualityManageService.Infrastructure\PowerQualityManageService.Infrastructure.csproj" />
   </ItemGroup>
 
