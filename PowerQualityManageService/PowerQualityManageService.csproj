@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PowerQualityManageService.Application\PowerQualityManageService.Application.csproj" />
+    <ProjectReference Include="..\PowerQualityManageService.Application\PowerQualityManageService.Domain.csproj" />
     <ProjectReference Include="..\PowerQualityManageService.Infrastructure\PowerQualityManageService.Infrastructure.csproj" />
   </ItemGroup>
 
