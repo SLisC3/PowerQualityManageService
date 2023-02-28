@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Globalization;
+using System.IO;
 
 namespace PowerQualityManageService.Controllers;
 
@@ -7,18 +10,20 @@ namespace PowerQualityManageService.Controllers;
 [Route("[controller]")]
 public class PowerQualityController : Controller
 {
-    
+
     [HttpGet]
     public ActionResult Index()
     {
         return View();
     }
 
-    // POST: DataController/Create
     [HttpPost]
     [Route("Upload")]
-    public ActionResult Create(IFormFile file)
+    public ActionResult Upload(IFormFile file)
     {
+        var stream = file.OpenReadStream();
+        
+        var dt = CSVHelper.ConvertCSVtoDataTable(stream);
 
         return Ok();
 
@@ -32,3 +37,5 @@ public class PowerQualityController : Controller
         //}
     }
 }
+
+
