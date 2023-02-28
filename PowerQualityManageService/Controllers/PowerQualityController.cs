@@ -5,7 +5,7 @@ namespace PowerQualityManageService.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DataController : Controller
+public class PowerQualityController : Controller
 {
     
     [HttpGet]
