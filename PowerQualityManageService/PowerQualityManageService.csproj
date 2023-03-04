@@ -18,4 +18,8 @@
 	<ProjectReference Include="..\PowerQualityManageService.Core\PowerQualityManageService.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Content\Resx\" />
+  </ItemGroup>
+
 </Project>
