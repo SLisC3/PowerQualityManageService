@@ -87,20 +87,14 @@ public enum Value : short
     UnbalancedCurrent = 15,
     PF = 16,
     QV = 17
-
 }
-public enum  PointOfMeasurement : short
+public enum  TypeOfMeasurement : short
 {
     NotApplicable = 0,
-    L1 = 1,
-    L2 = 2,
-    L3 = 3,
-    L12 = 4,
-    L23 = 5,
-    L31 = 6,
-    Neutral = 7,
-    Total = 8,
-
+    Phase = 1,
+    PhaseToPhase = 2,
+    Neutral = 3,
+    Total = 4,
 }
 
 public enum TypeOfValue: short
@@ -111,9 +105,4 @@ public enum TypeOfValue: short
     Max = 3,
     Abs = 4
 }
-public enum TypeOfMeasurement : short
-{
-    NotApplicable = 0,
-    Phase = 1,
-    PhaseToPhase = 2
-}
+
