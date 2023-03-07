@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PowerQualityManageService.Core.Utils.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ public static class ColumnHeaderRegexHelper
 {
     public static IEnumerable<string> TrimQuotes(IEnumerable<string> input)
     {
-        throw new NotImplementedException();
+        return input.SetValues(x => x.Trim(new char[] {' ','\'','"'}));
     }
 }

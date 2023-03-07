@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PowerQualityManageService.Core.Helpers;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -23,7 +24,9 @@ public class PowerQualityController : Controller
     {
         var stream = file.OpenReadStream();
         
-        var dt = CSVHelper.ConvertCSVtoDataTable(stream);
+        var headers = CSVHelper.ReadHeaders(stream);
+        var trimmedHeaders = ColumnHeaderRegexHelper.TrimQuotes(headers);
+        //var dt = CSVHelper.ConvertCSVtoDataTable(stream);
 
         return Ok();
 

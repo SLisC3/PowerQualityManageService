@@ -27,4 +27,13 @@ public static class CSVHelper
         }
         return dt;
     }
+    public static List<string> ReadHeaders(Stream stream)
+    {
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            var headerstring = sr.ReadLine();
+            if (headerstring != null) { return headerstring.Split(new char[] { ',', ';' }).ToList(); }        
+        }
+        return new List<string>();
+    }
 }
