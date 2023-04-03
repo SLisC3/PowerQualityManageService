@@ -26,6 +26,11 @@ public class PowerQualityController : Controller
         
         var headers = CSVHelper.ReadHeaders(stream);
         var trimmedHeaders = ColumnHeaderRegexHelper.TrimQuotes(headers);
+        List<ColumnHeader> columns = new List<ColumnHeader>();
+        foreach(var h in trimmedHeaders)
+        {
+            columns.Add(new ColumnHeader(h));
+        }
         //var dt = CSVHelper.ConvertCSVtoDataTable(stream);
 
         return Ok();
