@@ -15,31 +15,29 @@ public static class ColumnHeaderRegexHelper
     {
         return input.SetValues(x => x.Trim(new char[] { ' ', '\'', '"' }));
     }
-}
+    public static class RegexConsts
+    {
+        private const string Date = @"\bdate\b";
+        private const string Time = @"\btime\b";
+        private const string Flagging = @"\bflagging\b";
+        private const string Frequency = "^f[^a-z]";
+        private const string CosPhi = @"cos";
+        private const string TanPhi = @"tan";
+        private const string UnbalancedVoltage = @"unbalance.*voltage";
+        private const string UnbalancedCurrent = @"unbalance.*current";
 
-public static class RegexConsts
-{
-    public const string Date = @"\bdate\b";
-    public const string Time = @"\btime\b";
-    public const string Flagging = @"\bflagging\b";
-    public const string Frequency = "^f[^a-z]";
-    public const string CosPhi = @"cos";
-    public const string TanPhi = @"tan";
-    public const string UnbalancedVoltage= @"unbalance.*voltage";
-    public const string UnbalancedCurrent = @"unbalance.*current";
+        private const string Voltage = @"^u{1}[l_]*(?=\d)";
+        private const string Current = @"^i{1}[l_]*(?=\d)";
+        private const string Power = @"^p{1}[_ ,-]+"; // TODO
+        private const string Pst = @"pst";
+        private const string Plt = @"plt";
+        private const string ApparentPower = @"^s[_ ,-]+"; // TODO
+        private const string QV = @"qv";
+        private const string PF = @"pf";
+        private const string THD = @"thd";
+        private const string HarmonicVoltage = @"h{1}\d{1,2}[_, -]+";
 
-    public const string Voltage = @"^u{1}[l_]*(?=\d)";
-    public const string Current = @"^i{1}[l_]*(?=\d)";
-    public const string Power = @"^p{1}[_ ,-]+"; // TODO
-    public const string Pst = @"pst";
-    public const string Plt = @"plt";
-    public const string ApparentPower = @"^s[_ ,-]+"; // TODO
-    public const string QV = @"qv";
-    public const string PF= @"pf";
-    public const string THD = @"thd";
-    public const string HarmonicVoltage = @"h{1}\d{1,2}[_, -]+";
-
-    public static Dictionary<string, Kind> KindMap = new Dictionary<string, Kind>()
+        public static Dictionary<string, Kind> KindMap = new Dictionary<string, Kind>()
     {
         {Date, Kind.Date },
         {Time, Kind.Time },
@@ -61,12 +59,12 @@ public static class RegexConsts
         {HarmonicVoltage, Kind.HarmonicVoltage}
     };
 
-    public const string Phase= @"[a-gi-z]{1}\d{1}(?!\d)"; // TODO
-    public const string PhaseToPhase = @"[a-gi-z]{1}\d{2}"; // TODO
-    public const string Neutral = @"neutral"; 
-    public const string Total = @"total"; 
+        private const string Phase = @"[a-gi-z]{1}\d{1}(?!\d)"; 
+        private const string PhaseToPhase = @"[a-gi-z]{1}\d{2}"; 
+        private const string Neutral = @"neutral";
+        private const string Total = @"total";
 
-    public static Dictionary<string, TypeOfMeasurement> TypeOfMeasurementMap = new Dictionary<string, TypeOfMeasurement>()
+        public static Dictionary<string, TypeOfMeasurement> TypeOfMeasurementMap = new Dictionary<string, TypeOfMeasurement>()
     {
         {Phase, TypeOfMeasurement.Phase },
         {PhaseToPhase, TypeOfMeasurement.PhaseToPhase},
@@ -74,16 +72,19 @@ public static class RegexConsts
         {Total, TypeOfMeasurement.Total}
     };
 
-    public const string Mean = @"mean"; // TODO
-    public const string Min = @"min";
-    public const string Max = @"max";
-    public const string Abs = @"abs";
+        private const string Mean = @"mean"; 
+        private const string Min = @"min";
+        private const string Max = @"max";
+        private const string Abs = @"abs";
 
-    public static Dictionary<string, TypeOfValue> TypeOfValueMap = new Dictionary<string, TypeOfValue>()
+        public static Dictionary<string, TypeOfValue> TypeOfValueMap = new Dictionary<string, TypeOfValue>()
     {
         {Mean, TypeOfValue.Mean},
         {Min, TypeOfValue.Min},
         {Max, TypeOfValue.Max},
         {Abs, TypeOfValue.Abs}
     };
+    }
+
 }
+

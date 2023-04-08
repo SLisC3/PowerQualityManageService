@@ -31,7 +31,8 @@ public class PowerQualityController : Controller
         {
             columns.Add(new ColumnHeader(h));
         }
-        //var dt = CSVHelper.ConvertCSVtoDataTable(stream);
+        
+        var dt = CSVHelper.ReadRowsCount(stream,headers,5);
 
         return Ok();
 
