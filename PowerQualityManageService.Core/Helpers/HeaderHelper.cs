@@ -55,7 +55,7 @@ public class ColumnHeader
         _columnName = columnName;
         Identify(columnName);
 
-        //_name = GenerateColumnName();
+        _name = GenerateColumnName();
         _type = HeaderHelper.GetType((byte)_kind);
     }
 
@@ -66,9 +66,9 @@ public class ColumnHeader
 
     private void Identify(string columnName)
     {
-        (_kind,_kindValue) = HeaderHelper.DecodeColumn(columnName, RegexConsts.KindMap);
-        (_typeOfMeasurement, _typeOfMeasurementValue) = HeaderHelper.DecodeColumn(columnName, RegexConsts.TypeOfMeasurementMap);
-        (_typeOfValue, _) = HeaderHelper.DecodeColumn(columnName, RegexConsts.TypeOfValueMap);
+        (_kind,_kindValue) = HeaderHelper.DecodeColumn(columnName, ColumnHeaderRegexHelper.RegexConsts.KindMap);
+        (_typeOfMeasurement, _typeOfMeasurementValue) = HeaderHelper.DecodeColumn(columnName, ColumnHeaderRegexHelper.RegexConsts.TypeOfMeasurementMap);
+        (_typeOfValue, _) = HeaderHelper.DecodeColumn(columnName, ColumnHeaderRegexHelper.RegexConsts.TypeOfValueMap);
     }
     public string GenerateColumnName()
     {
