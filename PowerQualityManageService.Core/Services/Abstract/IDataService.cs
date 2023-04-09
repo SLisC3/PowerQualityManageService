@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Services.Abstract;
-internal interface IPowerQualityService
+public interface IDataService
 {
+    bool LoadData(Stream stream);
 }
