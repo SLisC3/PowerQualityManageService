@@ -16,17 +16,4 @@ public class DataRepository : IDataRepository
     {
         throw new NotImplementedException();
     }
-
-    public DataTable ParseData(Stream stream)
-    {
-        var headers = CSVHelper.ReadHeaders(stream);
-        var trimmedHeaders = ColumnHeaderRegexHelper.TrimQuotes(headers);
-        List<ColumnHeader> columns = new List<ColumnHeader>();
-        foreach (var h in trimmedHeaders)
-        {
-            columns.Add(new ColumnHeader(h));
-        }
-        var dt = CSVHelper.ReadRowsCount(stream, headers, 5);
-        return dt;
-    }
 }
