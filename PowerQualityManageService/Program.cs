@@ -1,9 +1,17 @@
+using PowerQualityManageService.Core.Repositories.Abstract;
+using PowerQualityManageService.Core.Repositories.Concrete;
+using PowerQualityManageService.Core.Services.Abstract;
+using PowerQualityManageService.Core.Services.Concrete;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IDataRepository, DataRepository>();
+
+builder.Services.AddScoped<IDataService, DataService>();
+
 builder.Services.AddRazorPages();
 
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
