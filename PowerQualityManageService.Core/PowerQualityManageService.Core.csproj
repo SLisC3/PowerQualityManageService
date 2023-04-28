@@ -10,4 +10,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PowerQualityManageService.Infrastructure\PowerQualityManageService.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

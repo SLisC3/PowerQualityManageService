@@ -2,19 +2,24 @@ using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Repositories.Concrete;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Core.Services.Concrete;
+using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
+using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IDataRepository, DataRepository>();
+builder.Services.AddScoped<IDataMongoDbRepository, DataMongoDbRepository>();
 
 builder.Services.AddScoped<IDataService, DataService>();
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
+builder.Services.Configure<SqlConfig>(builder.Configuration.GetSection(nameof(SqlConfig)));
 
 builder.Services.AddControllers()
     .AddJsonOptions(
