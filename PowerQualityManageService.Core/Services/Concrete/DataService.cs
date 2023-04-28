@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 namespace PowerQualityManageService.Core.Services.Concrete;
 public class DataService : IDataService
 {
-    private readonly IDataRepository _dataRepository;
+    private readonly IDataMongoDbRepository _dataRepository;
 
-    public DataService(IDataRepository dataRepository)
+    public DataService(IDataMongoDbRepository dataRepository)
     {
         _dataRepository = dataRepository;
     }
-    public bool LoadData(Stream stream)
+    public DataTable LoadData(Stream stream)
     {
-        var dr = ParseData(stream);
+        return ParseData(stream);
         throw new NotImplementedException();
     }
 
@@ -34,5 +34,11 @@ public class DataService : IDataService
         }
         var dt = CSVHelper.ReadRowsCount(stream, headers, 5);
         return dt;
+    }
+
+    public bool Test(DataTable dt)
+    {
+        _dataRepository.InsertData(dt);
+        return false;
     }
 }

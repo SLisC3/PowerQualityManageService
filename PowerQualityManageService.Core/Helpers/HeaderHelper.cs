@@ -62,8 +62,6 @@ public class ColumnHeader
     public string Name { get { return _name; } }
     public Type VariableType { get { return _type; } }
 
-    
-
     private void Identify(string columnName)
     {
         (_kind,_kindValue) = HeaderHelper.DecodeColumn(columnName, ColumnHeaderRegexHelper.RegexConsts.KindMap);

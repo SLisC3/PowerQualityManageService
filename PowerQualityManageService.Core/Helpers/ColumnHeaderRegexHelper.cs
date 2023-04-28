@@ -15,6 +15,7 @@ public static class ColumnHeaderRegexHelper
     {
         return input.SetValues(x => x.Trim(new char[] { ' ', '\'', '"' }));
     }
+
     public static class RegexConsts
     {
         private const string Date = @"\bdate\b";
@@ -28,10 +29,10 @@ public static class ColumnHeaderRegexHelper
 
         private const string Voltage = @"^u{1}[l_]*(?=\d)";
         private const string Current = @"^i{1}[l_]*(?=\d)";
-        private const string Power = @"^p{1}[_ ,-]+"; // TODO
+        private const string Power = @"^p{1}[_ ,-]+"; 
         private const string Pst = @"pst";
         private const string Plt = @"plt";
-        private const string ApparentPower = @"^s[_ ,-]+"; // TODO
+        private const string ApparentPower = @"^s[_ ,-]+"; 
         private const string QV = @"qv";
         private const string PF = @"pf";
         private const string THD = @"thd";

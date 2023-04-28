@@ -31,8 +31,9 @@ public class DataController : Controller
     public ActionResult Upload(IFormFile file)
     {
         var stream = file.OpenReadStream();
-        _service.LoadData(stream);
-        return _service.LoadData(stream) == true ? Ok() : BadRequest();
+        var dt =_service.LoadData(stream);
+        _service.Test(dt);
+        return Ok(); 
 
         //try
         //{
