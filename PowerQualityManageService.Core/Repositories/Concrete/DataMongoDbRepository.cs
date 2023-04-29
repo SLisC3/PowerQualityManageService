@@ -21,7 +21,7 @@ public class DataMongoDbRepository : IDataMongoDbRepository
         _dataSamples = mongoDbContext.DataSamples;
     }
 
-    public async Task<bool> InsertData(DataTable dt)
+    public async Task<bool> InsertDataFromDataTable(DataTable dt)
     {
         if (dt == null)
         {
@@ -36,5 +36,10 @@ public class DataMongoDbRepository : IDataMongoDbRepository
         await _dataSamples.InsertManyAsync(batch.AsEnumerable());
 
         return true;
+    }
+
+    public Task<bool> InsertSingleData(BsonDocument document)
+    {
+        throw new NotImplementedException();
     }
 }

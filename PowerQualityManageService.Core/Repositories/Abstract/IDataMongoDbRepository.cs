@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 namespace PowerQualityManageService.Core.Repositories.Abstract;
 public interface IDataMongoDbRepository
 {
-    Task<bool> InsertData(DataTable dt);
+    Task<bool> InsertDataFromDataTable(DataTable dt);
+    Task<bool> InsertSingleData(BsonDocument document);
+
 
 }

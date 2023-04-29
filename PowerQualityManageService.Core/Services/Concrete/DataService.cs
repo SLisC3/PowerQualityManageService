@@ -32,13 +32,13 @@ public class DataService : IDataService
         {
             columns.Add(new ColumnHeader(h));
         }
-        var dt = CSVHelper.ReadRowsCount(stream, headers, 5);
+        var dt = CSVHelper.ReadRowsCount(stream, columns, 5);
         return dt;
     }
 
     public bool Test(DataTable dt)
     {
-        _dataRepository.InsertData(dt);
+        _dataRepository.InsertDataFromDataTable(dt);
         return false;
     }
 }

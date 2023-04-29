@@ -1,15 +1,17 @@
 ﻿using PowerQualityManageService.Core.Helpers;
 using System.Data;
+using System.Reflection.Emit;
+using System.Reflection;
 using System.Reflection.PortableExecutable;
 
 namespace PowerQualityManageService;
 
 public static class CSVHelper
 {
-    public static DataTable ReadRowsCount(Stream stream, List<string> headers, int rowsCount)
+    public static DataTable ReadRowsCount(Stream stream, List<ColumnHeader> headers, int rowsCount)
     {
         DataTable dt = new DataTable();
-        headers.ForEach(x => dt.Columns.Add(x));
+        headers.ForEach(x => dt.Columns.Add(x.Name, x.VariableType));
 
         if(stream.Position != 0) { stream.Position = 0; }
         using (NoDisposeInputStreamReader sr = new NoDisposeInputStreamReader(stream))
@@ -32,6 +34,7 @@ public static class CSVHelper
         }
         return dt;
     }
+
     public static DataTable ConvertCSVtoDataTable(Stream stream)
     {
         DataTable dt = new DataTable();
