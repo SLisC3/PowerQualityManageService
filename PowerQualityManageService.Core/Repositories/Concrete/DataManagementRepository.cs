@@ -124,4 +124,10 @@ public class DataManagementRepository : IDataManagementRepository
         }
         return columns;
     }
+
+    public void Delete(string fileName)
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", fileName);
+        File.Delete(filePath);
+    }
 }

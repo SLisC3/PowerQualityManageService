@@ -14,6 +14,7 @@ public interface IDataManagementRepository
 {
     public Task<string?> Upload(IFormFile file);
     public Stream? Download(string fileName);
+    public void Delete(string fileName);
     public Task<List<ColumnHeader>> GetHeaders(Stream stream);
     public Task<DataTable> ReadRows(Stream stream, List<ColumnHeader> headers, int count);
     public Task<DataTable> ReadRowsNoDispose(Stream stream, List<ColumnHeader> headers, int count);

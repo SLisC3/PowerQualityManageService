@@ -19,6 +19,7 @@ public class DataManagementService : IDataManagementService
     private readonly IDataManagementRepository _localRepository;
     private readonly IDataManagementDbRepository _dbRepository;
     private readonly IMemoryCache _memoryCache;
+    private readonly CacheHelper _cache;
 
     public DataManagementService(
         IDataManagementRepository localRepository,
@@ -28,6 +29,7 @@ public class DataManagementService : IDataManagementService
         _localRepository = localRepository;
         _dbRepository = dbRepository;
         _memoryCache = memoryCache;
+        _cache = new CacheHelper(memoryCache);
     }
     public async Task<string?> Upload(IFormFile file)
     {
@@ -39,25 +41,24 @@ public class DataManagementService : IDataManagementService
         Stream? stream = _localRepository.Download(fileName);
         if (stream == null) { return null; }
         List<ColumnHeader> headers = await _localRepository.GetHeaders(stream);
+        _cache.Set(fileName + "Headers", headers);
         DataTable data = await _localRepository.ReadRows(stream,headers,5); // TODO take from config number of rows
         return data;
     }
 
     public async Task<int> Save(string fileName)
     {
-        MemoryCacheEntryOptions? cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromMinutes(30));
-        _memoryCache.GetOrCreate(fileName + "Status", entry =>
-        {
-            entry.SetOptions(cacheEntryOptions);
-            return LoadStatusEnum.InProgress;
-        });
+        _cache.Set(fileName + "Status", SaveStatus.InProgress);
 
         try
         {
             Stream? stream = _localRepository.Download(fileName);
             if (stream == null || stream.Length == 0) { return 0; }
-            List<ColumnHeader> headers = await _localRepository.GetHeaders(stream);
+            List<ColumnHeader> headers;
+            if (!_cache.TryGetValue(fileName+"Headers",out headers))
+            {
+                headers = await _localRepository.GetHeaders(stream);
+            }
             int insertedRows = 0;
             while (stream.Position < stream.Length)
             {
@@ -71,11 +72,7 @@ public class DataManagementService : IDataManagementService
         }
         catch (Exception)
         {
-            _memoryCache.GetOrCreate(fileName + "Status", entry =>
-            {
-                entry.SetOptions(cacheEntryOptions);
-                return LoadStatusEnum.ErrorWhileLoading;
-            });
+            _cache.Set(fileName + "Status", SaveStatus.ErrorWhileLoading);
             return 0;
         }
 

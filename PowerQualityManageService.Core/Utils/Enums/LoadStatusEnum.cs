@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Utils.Enums;
-public enum LoadStatusEnum : byte
+public enum SaveStatus : byte
 {
     Awaiting = 0,
     InProgress = 1,
-    BufferFull = 2,
     Finished = 3,
     ErrorWhileLoading = 4
 }
