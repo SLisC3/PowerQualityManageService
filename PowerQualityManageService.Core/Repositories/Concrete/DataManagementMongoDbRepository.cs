@@ -13,19 +13,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
-public class DataMongoDbRepository : IDataMongoDbRepository
+public class DataManagementMongoDbRepository : IDataManagementDbRepository
 {
     private readonly IMongoCollection<BsonDocument> _dataSamples;
-    public DataMongoDbRepository(IMongoDbContext mongoDbContext)
+    public DataManagementMongoDbRepository(IMongoDbContext mongoDbContext)
     {
         _dataSamples = mongoDbContext.DataSamples;
     }
 
-    public async Task<bool> InsertDataFromDataTable(DataTable dt)
+    public async Task<int> InsertDataFromDataTable(DataTable dt)
     {
         if (dt == null)
         {
-            return false;
+            return 0;
         }
         var batch = new List<BsonDocument>();
         foreach(DataRow dr in dt.Rows)
@@ -34,12 +34,7 @@ public class DataMongoDbRepository : IDataMongoDbRepository
             batch.Add(new BsonDocument(dictionary));
         }
         await _dataSamples.InsertManyAsync(batch.AsEnumerable());
-
-        return true;
-    }
-
-    public Task<bool> InsertSingleData(BsonDocument document)
-    {
-        throw new NotImplementedException();
+        
+        return batch.Count;
     }
 }

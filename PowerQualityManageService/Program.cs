@@ -9,10 +9,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<IDataMongoDbRepository, DataMongoDbRepository>();
-
-builder.Services.AddScoped<IDataService, DataService>();
+// Add services/repos.
+builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
+builder.Services.AddScoped<IDataManagementRepository, DataManagementRepository>();
+builder.Services.AddScoped<IDataManagementService, DataManagementService>();
 
 builder.Services.AddRazorPages();
 
@@ -22,8 +22,7 @@ builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameo
 builder.Services.Configure<SqlConfig>(builder.Configuration.GetSection(nameof(SqlConfig)));
 
 builder.Services.AddControllers()
-    .AddJsonOptions(
-        options => options.JsonSerializerOptions.PropertyNamingPolicy = null); ;
+    .AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o=>

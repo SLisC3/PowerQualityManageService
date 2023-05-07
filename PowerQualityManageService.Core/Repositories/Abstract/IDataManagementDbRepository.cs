@@ -7,10 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Repositories.Abstract;
-public interface IDataMongoDbRepository
+public interface IDataManagementDbRepository
 {
-    Task<bool> InsertDataFromDataTable(DataTable dt);
-    Task<bool> InsertSingleData(BsonDocument document);
-
-
+    Task<int> InsertDataFromDataTable(DataTable dt);
 }
+
