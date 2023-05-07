@@ -15,14 +15,23 @@ public class DataManagementRepository : IDataManagementRepository
         {
             return null;
         }
-        var fileName = file.FileName;
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", fileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        string fileExtension = Path.GetExtension(file.FileName);
+        string baseFileName = Path.GetFileNameWithoutExtension(file.FileName);
+        string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", file.FileName);
+        int i = 1;
+        string fileName = string.Empty;
+        while(File.Exists(filePath)) 
+        {
+            fileName = baseFileName + $"{i}" + fileExtension;
+            filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", fileName);
+            i++;
+        }
+        
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
         {
             await file.CopyToAsync(stream);
         }
-        return filePath;
+        return fileName;
     }
     public Stream? Download(string fileName)
     {
