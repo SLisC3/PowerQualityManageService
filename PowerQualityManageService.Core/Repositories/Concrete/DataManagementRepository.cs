@@ -17,17 +17,8 @@ public class DataManagementRepository : IDataManagementRepository
         {
             return null;
         }
-        string fileExtension = Path.GetExtension(file.FileName);
-        string baseFileName = Path.GetFileNameWithoutExtension(file.FileName);
-        string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", file.FileName);
-        int i = 1;
-        string fileName = baseFileName + fileExtension;
-        while (File.Exists(filePath))
-        {
-            fileName = baseFileName + $"{i}" + fileExtension;
-            filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", fileName);
-            i++;
-        }
+        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", fileName);
 
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         {
