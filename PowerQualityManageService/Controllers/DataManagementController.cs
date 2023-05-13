@@ -54,17 +54,6 @@ public class DataManagementController : Controller
         return Ok(res);
     }
 
-
-
-
-
-
-
-
-
-
-
-
     //    [HttpPut]
     //    public ActionResult ModifyHeader(ColumnHeader header)
     //    {
