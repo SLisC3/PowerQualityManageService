@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Services.Abstract;
-public interface IDataManagementService
+public interface IDataAcquisitionService
 {
     public Task<string?> Upload(IFormFile file);
     public Task<DataTable?> LoadParseHeaders(string fileName);

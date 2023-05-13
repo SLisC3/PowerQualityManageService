@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Repositories.Abstract;
 
-public interface IDataManagementRepository
+public interface IDataAcquisitionRepository
 {
     public Task<string?> Upload(IFormFile file);
     public Stream? Download(string fileName);

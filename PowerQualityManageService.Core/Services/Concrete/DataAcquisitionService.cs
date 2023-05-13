@@ -14,21 +14,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Services.Concrete;
-public class DataManagementService : IDataManagementService
+public class DataAcquisitionService : IDataAcquisitionService
 {
-    private readonly IDataManagementRepository _localRepository;
+    private readonly IDataAcquisitionRepository _localRepository;
     private readonly IDataManagementDbRepository _dbRepository;
-    private readonly IMemoryCache _memoryCache;
     private readonly CacheHelper _cache;
 
-    public DataManagementService(
-        IDataManagementRepository localRepository,
+    public DataAcquisitionService(
+        IDataAcquisitionRepository localRepository,
         IDataManagementDbRepository dbRepository,
         IMemoryCache memoryCache)
     {
         _localRepository = localRepository;
         _dbRepository = dbRepository;
-        _memoryCache = memoryCache;
         _cache = new CacheHelper(memoryCache);
     }
     public async Task<string?> Upload(IFormFile file)

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 
-public class DataManagementRepository : IDataManagementRepository
+public class DataAcquisitionRepository : IDataAcquisitionRepository
 {
     public async Task<string?> Upload(IFormFile file)
     {
