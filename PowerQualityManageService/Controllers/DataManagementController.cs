@@ -16,9 +16,9 @@ namespace PowerQualityManageService.Controllers;
 [Route("[controller]")]
 public class DataManagementController : Controller
 {
-    private readonly IDataManagementService _dataManagementService;
+    private readonly IDataAcquisitionService _dataManagementService;
     private readonly IMemoryCache _cache;
-    public DataManagementController(IDataManagementService service, IMemoryCache cache)
+    public DataManagementController(IDataAcquisitionService service, IMemoryCache cache)
     {
         _dataManagementService = service;
         _cache = cache;
