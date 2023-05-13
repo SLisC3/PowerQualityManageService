@@ -63,7 +63,7 @@ public class DataManagementService : IDataManagementService
             int insertedRows = 0;
             while (stream.Position < stream.Length)
             {
-                DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 3);
+                DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 5000); // TODO take from config number of rows 
                 insertedRows += await _dbRepository.InsertDataFromDataTable(dt);
                 dt.Dispose();
             }
