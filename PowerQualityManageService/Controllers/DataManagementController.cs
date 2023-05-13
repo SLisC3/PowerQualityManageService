@@ -48,9 +48,9 @@ public class DataManagementController : Controller
 
     [HttpPost]
     [Route("Save")]
-    public async Task<ActionResult<int>> Save(string fileNmae)
+    public async Task<ActionResult<int>> Save(string fileName)
     {
-        int res = await _dataManagementService.Save(fileNmae);
+        int res = await _dataManagementService.Save(fileName);
         return Ok(res);
     }
 

@@ -80,6 +80,7 @@ public class DataManagementRepository : IDataManagementRepository
         headers.ForEach(x => dt.Columns.Add(x.Name, x.VariableType));
         if (timeIdx >= 0 && dateIdx >= 0) dt.Columns.RemoveAt(timeIdx);
         long position = stream.Position;
+        bool headersFromCache = stream.Position ==0;
 
         using (NoDisposeInputStreamReader sr = new NoDisposeInputStreamReader(stream, Encoding.UTF8))
         {
@@ -87,8 +88,14 @@ public class DataManagementRepository : IDataManagementRepository
             for (int i = 0; i < count; i++)
             {
                 string? row = await sr.ReadLineAsync(); 
-                if (row == null) return dt; 
+                if (string.IsNullOrEmpty(row)) return dt;
+                if (headersFromCache)
+                {
+                    headersFromCache= false;
+                    continue;
+                }
                 List<string> rows = row.Split(';').ToList();
+
                 if (timeIdx >= 0 && dateIdx >= 0)
                 {
                     if (timeIdx >= 0 && dateIdx >= 0) rows[dateIdx] = string.Concat(rows[dateIdx], " ", rows[timeIdx]);
