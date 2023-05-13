@@ -59,10 +59,11 @@ public class DataManagementService : IDataManagementService
             {
                 headers = await _localRepository.GetHeaders(stream);
             }
+
             int insertedRows = 0;
             while (stream.Position < stream.Length)
             {
-                DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 1000);
+                DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 3);
                 insertedRows += await _dbRepository.InsertDataFromDataTable(dt);
                 dt.Dispose();
             }

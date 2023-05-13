@@ -21,6 +21,7 @@ public class CacheHelper
 
     public bool TryGetValue<T>(string key, out T value)
     {
+        key = key.ToLower();
         if (_cache.TryGetValue(key, out value))
         {
             return true;
@@ -30,6 +31,7 @@ public class CacheHelper
 
     public void Set<T>(string key, T value)
     {
+        key = key.ToLower();
         _cache.Set(key, value, _options);
     }
 

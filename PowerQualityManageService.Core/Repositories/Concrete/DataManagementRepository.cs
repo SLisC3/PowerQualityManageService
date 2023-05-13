@@ -4,6 +4,8 @@ using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Utils.Enums;
 using PowerQualityManageService.Core.Utils.Extensions;
 using System.Data;
+using System.IO;
+using System.Text;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 
@@ -19,14 +21,14 @@ public class DataManagementRepository : IDataManagementRepository
         string baseFileName = Path.GetFileNameWithoutExtension(file.FileName);
         string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", file.FileName);
         int i = 1;
-        string fileName = string.Empty;
-        while(File.Exists(filePath)) 
+        string fileName = baseFileName + fileExtension;
+        while (File.Exists(filePath))
         {
             fileName = baseFileName + $"{i}" + fileExtension;
             filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", fileName);
             i++;
         }
-        
+
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         {
             await file.CopyToAsync(stream);
@@ -40,9 +42,9 @@ public class DataManagementRepository : IDataManagementRepository
         {
             return File.OpenRead(filePath);
         }
-        catch 
+        catch
         {
-            return null; 
+            return null;
         }
     }
     public async Task<DataTable> ReadRows(Stream stream, List<ColumnHeader> headers, int count)
@@ -50,8 +52,8 @@ public class DataManagementRepository : IDataManagementRepository
         DataTable dt = new DataTable();
         int timeIdx = headers.FindIndex(x => x.Kind == Kind.Time);
         int dateIdx = headers.FindIndex(x => x.Kind == Kind.Date);
-        if (timeIdx >= 0 && dateIdx >= 0) headers.RemoveAt(timeIdx);
         headers.ForEach(x => dt.Columns.Add(x.Name, x.VariableType));
+        if (timeIdx >= 0 && dateIdx >= 0) dt.Columns.RemoveAt(timeIdx);
 
         if (stream.Position != 0) { stream.Position = 0; }
         using (StreamReader sr = new StreamReader(stream))
@@ -84,23 +86,21 @@ public class DataManagementRepository : IDataManagementRepository
         DataTable dt = new DataTable();
         int timeIdx = headers.FindIndex(x => x.Kind == Kind.Time);
         int dateIdx = headers.FindIndex(x => x.Kind == Kind.Date);
-        if (timeIdx >= 0 && dateIdx >= 0) headers.RemoveAt(timeIdx);
         headers.ForEach(x => dt.Columns.Add(x.Name, x.VariableType));
+        if (timeIdx >= 0 && dateIdx >= 0) dt.Columns.RemoveAt(timeIdx);
+        long position = stream.Position;
 
-        if (stream.Position != 0) { stream.Position = 0; }
-        using (NoDisposeInputStreamReader sr = new NoDisposeInputStreamReader(stream))
+        using (NoDisposeInputStreamReader sr = new NoDisposeInputStreamReader(stream, Encoding.UTF8))
         {
             if (sr.EndOfStream) return dt;
-            await sr.ReadLineAsync();
             for (int i = 0; i < count; i++)
             {
-                if (sr.EndOfStream) return dt;
-                string? row = await sr.ReadLineAsync();
-                if (row == null) return dt; ;
+                string? row = await sr.ReadLineAsync(); 
+                if (row == null) return dt; 
                 List<string> rows = row.Split(';').ToList();
                 if (timeIdx >= 0 && dateIdx >= 0)
                 {
-                    rows[dateIdx] = string.Concat(rows[dateIdx], " ", rows[timeIdx]);
+                    if (timeIdx >= 0 && dateIdx >= 0) rows[dateIdx] = string.Concat(rows[dateIdx], " ", rows[timeIdx]);
                     rows.RemoveAt(timeIdx);
                 }
                 DataRow dr = dt.NewRow();
@@ -109,20 +109,29 @@ public class DataManagementRepository : IDataManagementRepository
                     dr[j] = !string.IsNullOrWhiteSpace(rows[j]) ? rows[j] : dt.Columns[j].DataType.GetDefaultValue().ToString();
                 }
                 dt.Rows.Add(dr);
+                if (sr.EndOfStream) return dt;
+                position += row.Length + 2;
+                if (i == count - 1)
+                {
+                    stream.Position = position;
+                }
+                
             }
+            
         }
         return dt;
     }
     public async Task<List<ColumnHeader>> GetHeaders(Stream stream)
     {
         List<string>? headers = null;
-        using (NoDisposeInputStreamReader sr = new NoDisposeInputStreamReader(stream))
+        using (NoDisposeInputStreamReader sr = new NoDisposeInputStreamReader(stream, Encoding.UTF8))
         {
             var headerstring = await sr.ReadLineAsync();
             if (headerstring != null)
             {
                 headers = headerstring.Split(new char[] { ',', ';' }).ToList();
             }
+            if (headerstring != null) stream.Position -= 1024 - (Encoding.UTF8.GetByteCount(headerstring) + 2);
         }
         if (headers == null) return new List<ColumnHeader>();
         IEnumerable<string> trimmedHeaders = ColumnHeaderRegexHelper.TrimQuotes(headers);
