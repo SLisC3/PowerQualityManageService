@@ -172,7 +172,7 @@ public static class HeaderHelper
                 return (mapping.Value, numericValue);
             }
         }
-        return (default(T), null);
+        return (default(T), null)!;
     }
 }
 

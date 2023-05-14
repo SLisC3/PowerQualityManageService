@@ -22,7 +22,7 @@ public class CacheHelper
     public bool TryGetValue<T>(string key, out T value)
     {
         key = key.ToLower();
-        if (_cache.TryGetValue(key, out value))
+        if (_cache.TryGetValue(key, out value!))
         {
             return true;
         }
