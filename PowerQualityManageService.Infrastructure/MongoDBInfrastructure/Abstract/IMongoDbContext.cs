@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using PowerQualityManageService.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstrac
 public interface IMongoDbContext
 {
     public bool IsMongoActive();
-    IMongoCollection<BsonDocument> DataSamples {get;}
+    IMongoCollection<DataSample> DataSamples {get;}
 }
 
