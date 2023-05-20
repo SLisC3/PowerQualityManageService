@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Repositories.Concrete;
 using PowerQualityManageService.Core.Services.Abstract;
@@ -11,15 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services/repos.
 builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
-builder.Services.AddScoped<IDataManagementRepository, DataManagementRepository>();
-builder.Services.AddScoped<IDataManagementService, DataManagementService>();
+builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
+builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
+
+builder.Services.AddScoped<IDataAcquisitionService, DataAcquisitionService>();
+builder.Services.AddScoped<ITemplateService, TemplateService>();
 
 builder.Services.AddRazorPages();
 
+builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
 builder.Services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
-builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
-builder.Services.Configure<SqlConfig>(builder.Configuration.GetSection(nameof(SqlConfig)));
+var sqlConfig = builder.Configuration.GetSection(nameof(SqlConfig)).Get<SqlConfig>();
+builder.Services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(sqlConfig.ConnectionString));
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
