@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PowerQualityManageService.Core.Helpers;
-using System.Data;
-using System.Globalization;
-using System.IO;
+﻿using Microsoft.AspNetCore.Mvc;
+using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
-using PowerQualityManageService.Pages;
-using Microsoft.Extensions.Caching.Memory;
-
+using System.Data;
 
 namespace PowerQualityManageService.Controllers;
 
@@ -16,57 +9,26 @@ namespace PowerQualityManageService.Controllers;
 [Route("[controller]")]
 public class DataManagementController : Controller
 {
-    private readonly IDataAcquisitionService _dataManagementService;
-    private readonly IMemoryCache _cache;
-    public DataManagementController(IDataAcquisitionService service, IMemoryCache cache)
-    {
-        _dataManagementService = service;
-        _cache = cache;
-    }
+    private readonly IDataService _dataManagementService;
+    private readonly IDataManagementDbRepository _rep;
 
+    public DataManagementController(IDataService dataManagementService, IDataManagementDbRepository rep)
+    {
+        _dataManagementService = dataManagementService;
+        _rep = rep;
+    }
     [HttpGet]
-    public ActionResult Index()
+    [Route("Data")]
+    public async Task<ActionResult> GetData(DateTime startDate, DateTime endDate)
     {
-        return View();
+        var keys = new List<string>() { "THD_PhaseToPhase31", "Frequency" };
+        var res = _dataManagementService.GetResults(startDate, endDate, keys);
+        return Ok();
     }
-
-    [HttpPost]
-    [Route("Upload")]
-    public async Task<ActionResult<string?>> Upload(IFormFile file)
-    {
-        string? res = await _dataManagementService.Upload(file);
-        return res == null ? NotFound() : Ok(res);
-    }
-
     [HttpGet]
-    [Route("Headers")]
-    public async Task<ActionResult<DataTable?>> Headers(string fileName)
+    [Route("Test")]
+    public async Task<ActionResult<DataTable>> Test (DateTime startDate, DateTime endDate)
     {
-        var dt = await _dataManagementService.LoadParseHeaders(fileName);
-        return dt == null ? NotFound() : Ok(dt);
+        return Ok(await _rep.GetDataSamplesDT(startDate, endDate));
     }
-
-    [HttpPost]
-    [Route("Save")]
-    public async Task<ActionResult<int>> Save(string fileName)
-    {
-        int res = await _dataManagementService.Save(fileName);
-        return Ok(res);
-    }
-
-    //    [HttpPut]
-    //    public ActionResult ModifyHeader(ColumnHeader header)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    [HttpPost]
-    //    [Route("Test")]
-    //    public ActionResult Test()
-    //    {
-
-    //        return Ok();
-    //    }
 }
-
-
