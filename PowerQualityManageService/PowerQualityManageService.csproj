@@ -25,4 +25,19 @@
     <Folder Include="Uploads\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\Report.Designer.cs">
+      <DependentUpon>Report.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Report.resx">
+      <LastGenOutput>Report.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
