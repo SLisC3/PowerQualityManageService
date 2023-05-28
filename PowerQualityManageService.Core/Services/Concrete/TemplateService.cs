@@ -15,11 +15,11 @@ public class TemplateService : ITemplateService
         _templateRepository = templateRepository;
     }
 
-    public async Task<Template?> ExtendTemplate(int id, string content) 
+    public async Task<Template?> ExtendTemplate(int id, Chart chart) 
     {
         var template = await _templateRepository.GetTemplateById(id);
         if (template == null) return null;
-        template.Content += content;
+        template.Charts.Add(chart);
         return await _templateRepository.UpdateTemplate(id, template);
     }
     public async Task<Template> AddTemplate(Template template)
