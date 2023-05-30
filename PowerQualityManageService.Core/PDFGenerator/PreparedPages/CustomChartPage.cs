@@ -48,7 +48,31 @@ public class CustomChartPage : IBasePage
         {
             row.RelativeItem().Column(column =>
             {
-                
+                column
+                    .Item()
+                    .Element(ComposeChart);
+            });
+        });
+    }
+
+    void ComposeChart(IContainer container)
+    {
+        if (_model.AdditionalCharts == null || _model.AdditionalCharts.Count == 0) return;
+        container.Row(row =>
+        {
+            row.RelativeItem().Column(column =>
+            {
+                foreach (ChartData chartData in _model.AdditionalCharts)
+                {
+                    column
+                        .Item()
+                        .PaddingBottom(10)
+                        .Text(chartData.Name)
+                        .Style(semiTitleStyle);
+                    column
+                        .Item()
+                        .Image(ChartGenerator.GenerateChart(chartData));
+                }
 
             });
         });
