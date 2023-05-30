@@ -19,10 +19,10 @@ public class DataManagementController : Controller
     }
     [HttpGet]
     [Route("Data")]
-    public async Task<ActionResult> GetData(DateTime startDate, DateTime endDate)
+    public async Task<ActionResult> GetData(DateTime startDate, DateTime endDate, string measuringPoint)
     {
         var keys = new List<string>() { "THD_PhaseToPhase31", "Frequency" };
-        var res = _dataManagementService.GetResults(startDate, endDate, keys);
+        var res = _dataManagementService.GetSamples(startDate, endDate, measuringPoint, keys);
         return Ok();
     }
     [HttpGet]

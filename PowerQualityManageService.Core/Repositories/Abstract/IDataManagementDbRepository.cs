@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace PowerQualityManageService.Core.Repositories.Abstract;
 public interface IDataManagementDbRepository
 {
-    Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate);
+    Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate, string measuringPoint);
     Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate);
-    Task<int> InsertDataFromDataTable(DataTable dt);
+    Task<int> InsertDataFromDataTable(DataTable dt, string measuringPoint);
 }
 
