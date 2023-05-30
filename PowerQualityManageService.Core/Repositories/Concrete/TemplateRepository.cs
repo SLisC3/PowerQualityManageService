@@ -3,16 +3,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using MongoDB.Driver;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Infrastructure.Models;
-using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
-using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
+using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
 
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
-
 public class TemplateRepository : ITemplateRepository
 {
     private readonly IMongoCollection<Template> _templates;
-    public TemplateRepository(MongoDbContext context)
+    public TemplateRepository(IMongoDbContext context)
     {
         _templates = context.Templates;
     }
