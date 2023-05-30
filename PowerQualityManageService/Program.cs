@@ -17,10 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
 builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IDataAcquisitionService, DataAcquisitionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddRazorPages();
 
@@ -41,31 +43,6 @@ builder.Services.AddSwaggerGen(o=>
     var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     //o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
-
-
-var p = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Imgs\\harmoniczne3-5.jpg"));
-
-//var filePath = "test.pdf";
-var model = new ReportModel();
-model.StationName = "testowa";
-model.FromDate= DateTime.Now.AddDays(-1);
-model.ToDate= DateTime.Now.AddDays(1);
-model.Results = new List<SingleResult>() { new SingleResult() { Name ="1a", Success= true }, new SingleResult() { Name = "1b", Success = false, Message = "B³ad" }, new SingleResult() { Name = "2"} };
-model.ResultCharts = new List<ChartData>() {
-    new ChartData() { 
-        Name = "Charcik", Data = new Dictionary<string, double[]>() {
-            { "V1", new double[] {1,7,-2 } },
-            { "V2", new double[] {3,4,5 } },
-            { "V3", new double[] {0,5,10 } },
-            
-        }, DateLabels = new List<DateTime>() {DateTime.Now.AddDays(-1), DateTime.Now, DateTime.Now.AddDays(1)} 
-    }
-};
-var document = new ReportDocument(model);
-document.ShowInPreviewer();
-    //GeneratePdf(filePath);
-
-//Process.Start("explorer.exe", filePath);
 
 var app = builder.Build();
 
