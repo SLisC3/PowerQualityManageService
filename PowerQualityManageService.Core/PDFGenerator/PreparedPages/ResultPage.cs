@@ -1,8 +1,7 @@
-﻿using Microcharts;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using PowerQualityManageService.Core.Helpers;
+﻿using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.PDFGenerator.Abstract;
 using PowerQualityManageService.Core.PDFGenerator.PageModels;
+using PowerQualityManageService.Model.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -115,7 +114,7 @@ public class ResultPage : IBasePage
                 }
             });
 
-            foreach (SingleResult res in _model.Results)
+            foreach (SingleNormResult res in _model.Results)
             {
                 table
                     .Cell()
@@ -173,7 +172,7 @@ public class ResultPage : IBasePage
 
     void ComposeChart(IContainer container)
     {
-        if (_model.ResultCharts == null || _model.ResultCharts.Count == 0) return;
+        if (_model.ResultCharts == null || _model.ResultCharts.Count() == 0) return;
         container.Row(row =>
         {
             row.RelativeItem().Column(column =>

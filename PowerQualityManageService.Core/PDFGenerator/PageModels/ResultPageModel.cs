@@ -1,24 +1,22 @@
-﻿using Microcharts;
-using SkiaSharp;
-using System.Linq;
+﻿using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Core.PDFGenerator.PageModels;
 
 public class ResultPageModel
 {
-    public IEnumerable<SingleResult> Results { get; set; }
-    public List<ChartData>? ResultCharts { get;set; }
-}
-public class SingleResult
-{
-    public string Name { get; set; } = null!;
-    public bool? Success { get; set; }
-    public string? Message { get; set; }
+    public IEnumerable<SingleNormResult> Results { get; set; } = null!;
+    public IEnumerable<ChartData> ResultCharts { get; set; } = null!;
+    public int NormValue { get; set; }
 }
 
-public class ChartData
+public enum normType
 {
-    public string Name { get; set; } = null!;
-    public Dictionary<string, double[]> Data { get; set; } = null!;
-    public IEnumerable<DateTime> DateLabels { get; set; } = null!;
+    AllValues = 1,
+    PartialValues = 2
+}
+public enum actionType
+{
+    LargerThan = 1,
+    SmallerThan = 2,
+    Equal = 3
 }

@@ -1,9 +1,4 @@
-﻿using PowerQualityManageService.Core.PDFGenerator.PageModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Core.Helpers;
 public class ChartGenerator

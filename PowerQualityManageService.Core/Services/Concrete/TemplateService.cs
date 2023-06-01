@@ -1,8 +1,6 @@
-﻿using Microsoft.Identity.Client;
-using PowerQualityManageService.Core.Repositories.Abstract;
+﻿using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
-using PowerQualityManageService.Infrastructure.Models;
-
+using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Core.Services.Concrete;
 
@@ -15,11 +13,11 @@ public class TemplateService : ITemplateService
         _templateRepository = templateRepository;
     }
 
-    public async Task<Template?> ExtendTemplate(int id, Chart chart) 
+    public async Task<Template?> ExtendTemplate(int id, ChartDataDefinition chart) 
     {
         var template = await _templateRepository.GetTemplateById(id);
         if (template == null) return null;
-        template.Charts.Add(chart);
+        template.Charts.Append(chart);
         return await _templateRepository.UpdateTemplate(id, template);
     }
     public async Task<Template> AddTemplate(Template template)

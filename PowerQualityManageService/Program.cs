@@ -8,6 +8,7 @@ using PowerQualityManageService.Core.Services.Concrete;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
 using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
+using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 using System.Reflection;
 
@@ -17,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
 builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
-builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IDataAcquisitionService, DataAcquisitionService>();
@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(o=>
     var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     //o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
-
+QuestPDF.Settings.License = LicenseType.Community;
 var app = builder.Build();
 
 app.UseSwagger();

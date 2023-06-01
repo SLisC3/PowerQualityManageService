@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using MongoDB.Driver;
 using PowerQualityManageService.Core.Repositories.Abstract;
-using PowerQualityManageService.Infrastructure.Models;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
-
+using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 public class TemplateRepository : ITemplateRepository

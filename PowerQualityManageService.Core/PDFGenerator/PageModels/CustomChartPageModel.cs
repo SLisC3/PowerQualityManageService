@@ -1,4 +1,6 @@
-﻿namespace PowerQualityManageService.Core.PDFGenerator.PageModels;
+﻿using PowerQualityManageService.Model.Models;
+
+namespace PowerQualityManageService.Core.PDFGenerator.PageModels;
 
 public class CustomChartPageModel
 {

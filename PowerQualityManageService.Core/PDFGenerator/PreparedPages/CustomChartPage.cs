@@ -1,6 +1,7 @@
 ﻿using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.PDFGenerator.Abstract;
 using PowerQualityManageService.Core.PDFGenerator.PageModels;
+using PowerQualityManageService.Model.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 

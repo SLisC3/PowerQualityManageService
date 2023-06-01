@@ -11,4 +11,8 @@ public static class EnumerableExtensions
     {
         return items.Select(x=> update(x));
     }
+    public static double[] ToDoubleArray(this IEnumerable<object?> items)
+    {
+        return items.Cast<decimal>().Select(x => Decimal.ToDouble(x)).ToArray();
+    }
 }

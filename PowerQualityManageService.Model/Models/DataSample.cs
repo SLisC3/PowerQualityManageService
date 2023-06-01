@@ -1,4 +1,4 @@
-﻿namespace PowerQualityManageService.Infrastructure.Models;
+﻿namespace PowerQualityManageService.Model.Models;
 
 public class DataSample
 {

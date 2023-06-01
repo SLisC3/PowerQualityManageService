@@ -1,11 +1,5 @@
-﻿using MongoDB.Bson;
-using PowerQualityManageService.Infrastructure.Models;
-using System;
-using System.Collections.Generic;
+﻿using PowerQualityManageService.Model.Models;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Repositories.Abstract;
 public interface IDataManagementDbRepository
