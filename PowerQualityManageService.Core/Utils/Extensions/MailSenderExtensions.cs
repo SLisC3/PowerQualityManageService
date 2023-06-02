@@ -10,7 +10,7 @@ using System.Reflection;
 namespace PowerQualityManageService.Core.Helpers;
 public static class MailSenderExtensions
 {
-    public static async void SendSmtpAsync(this MailMessage message)
+    public static async Task<bool> SendSmtpAsync(this MailMessage message)
     {
         string mailFrom = "PowerQualityManager@gmail.com";
         string passwordFrom = "mkmmzzrtqmtngzuz";
@@ -21,8 +21,12 @@ public static class MailSenderExtensions
             Credentials = new NetworkCredential(mailFrom, passwordFrom),
             EnableSsl = true
         };
-
-        await smtp.SendMailAsync(message);
+        try
+        {
+            await smtp.SendMailAsync(message);
+            return true;
+        }
+        catch (Exception ex) { return false; }
     }
 
 
@@ -45,11 +49,6 @@ public static class MailSenderExtensions
     {
         mailMessage.Body = body;
         mailMessage.IsBodyHtml = isHtml;
-    }
-
-    public static void AddAttachmenet(this MailMessage mailMessage, byte[] bytes, string name, string contentType)
-    {
-        mailMessage.AddAttachmenet(bytes, name, contentType); 
     }
 
 }

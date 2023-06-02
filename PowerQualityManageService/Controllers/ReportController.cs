@@ -24,34 +24,46 @@ public class ReportController : Controller
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        var fileName = await _reportService.GenerateReport(templateId, resultDefinition);
+        string? fileName = await _reportService.GenerateReport(templateId, resultDefinition);
         
         stopwatch.Stop();
         TimeSpan czasWykonania = stopwatch.Elapsed;
         Console.WriteLine("Czas wykonania akcji w controllerze: " + czasWykonania);
         
-        return Ok(fileName);
+        return fileName != null ? Ok(fileName) : BadRequest() ;
     }
 
     [HttpGet]
     [Route("Preview")]
-    public async Task<ActionResult<string>> Preview(string fileName)
+    public async Task<ActionResult> Preview(string fileName)
     {
-        //Process.Start("explorer.exe", filePath);
-        throw new NotImplementedException();
+        _reportService.PreviewReport(fileName);
+        return Ok();
     }
 
     [HttpPost]
     [Route("SendMail")]
-    public async Task<ActionResult> SendMail(string fileName)
+    public async Task<ActionResult> SendMail(string fileName, MailModel model)
     {
-        throw new NotImplementedException();
+        bool result = await _reportService.SendMail(fileName,model);
+        return result == true ? Ok() : BadRequest();
     }
 
     [HttpGet]
     [Route("Download")]
     public async Task<ActionResult> Download(string fileName)
     {
-        throw new NotImplementedException();
+        byte[] file = await _reportService.Download(fileName);
+        Response.Headers.Clear();
+        Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{fileName}\"");
+        return File(file, "application/octet-stream");
+    }
+
+    [HttpGet]
+    [Route("Delete")]
+    public async Task<ActionResult> Delete(string fileName)
+    {
+        bool result = _reportService.Delete(fileName);
+        return result == true ? Ok() : NotFound();
     }
 }

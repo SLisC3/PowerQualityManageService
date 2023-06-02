@@ -15,10 +15,23 @@ public class ReportService : IReportService
 {
     private readonly ITemplateService _templateService;
     private readonly IDataService _dataService;
-    public ReportService(ITemplateService templateService, IDataService dataService)
+    private readonly IReportRepository _reportRepository;
+
+    public ReportService(ITemplateService templateService, IDataService dataService, IReportRepository reportRepository)
     {
         _templateService = templateService;
         _dataService = dataService;
+        _reportRepository = reportRepository;
+    }
+
+    public bool Delete(string fileName)
+    {
+        return _reportRepository.Delete(fileName);
+    }
+
+    public async Task<byte[]> Download(string fileName)
+    {
+        return await _reportRepository.Get(fileName);
     }
 
     public async Task<string?> GenerateReport(int templateId, ResultDefinition resultDefinition)
@@ -71,6 +84,17 @@ public class ReportService : IReportService
         Console.WriteLine("Czas Generowania PDF: " + stopwatch.Elapsed);
 #endif
         return fileName;
+    }
+
+    public void PreviewReport(string fileName)
+    {
+        _reportRepository.Preview(fileName);
+    }
+
+    public async Task<bool> SendMail(string fileName, MailModel model)
+    {
+        model.Attachment = fileName;
+        return await MailSender.SendMail(model);
     }
 
     private List<ChartData> PrepareCharts(IEnumerable<ChartDataDefinition> charts, GetSamplesModel samplesWithDatalabels)
