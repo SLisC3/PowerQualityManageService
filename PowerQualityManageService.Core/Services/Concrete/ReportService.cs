@@ -23,12 +23,28 @@ public class ReportService : IReportService
 
     public async Task<string?> GenerateReport(int templateId, ResultDefinition resultDefinition)
     {
+#if DEBUG
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+#endif
         Template? template = await _templateService.GetTemplateById(templateId);
         if (template == null) return null;
+#if DEBUG
+        stopwatch.Stop();
+        Console.WriteLine("Czas Wyciągania template'u: " + stopwatch.Elapsed);
 
+        stopwatch.Restart();
+        stopwatch.Start();
+#endif
         List<string> keys = NormResultReportHelper.GetKeys(template.Charts.SelectMany(x => x.SamplesName));
         GetSamplesModel samplesWithDatalabels = await _dataService.GetSamples(resultDefinition.DateFrom, resultDefinition.DateTo, resultDefinition.MeasuringPoint, keys);
+#if DEBUG
+        stopwatch.Stop();
+        Console.WriteLine("Czas Wyciągania Sampli: " + stopwatch.Elapsed);
 
+        stopwatch.Restart();
+        stopwatch.Start();
+#endif
         ReportModel reportModel = new ReportModel()
         {
             FromDate = resultDefinition.DateFrom,
@@ -39,12 +55,22 @@ public class ReportService : IReportService
             AdditionalCharts = PrepareCharts(template.Charts, samplesWithDatalabels)
         };
 
-        string filePath = "test.pdf";
+#if DEBUG
+        stopwatch.Stop();
+        Console.WriteLine("Czas tworzenia ReportModel: " + stopwatch.Elapsed);
+
+        stopwatch.Restart();
+        stopwatch.Start();
+#endif
+        string fileName = Guid.NewGuid().ToString() + ".pdf";
+        string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", fileName);
         ReportDocument document = new ReportDocument(reportModel);
         document.GeneratePdf(filePath);
-
-        Process.Start("explorer.exe", filePath);
-        return filePath;
+#if DEBUG
+        stopwatch.Stop();
+        Console.WriteLine("Czas Generowania PDF: " + stopwatch.Elapsed);
+#endif
+        return fileName;
     }
 
     private List<ChartData> PrepareCharts(IEnumerable<ChartDataDefinition> charts, GetSamplesModel samplesWithDatalabels)

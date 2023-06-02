@@ -35,7 +35,7 @@ public class ResultPage : IBasePage
     }
     void ComposeHeader(IContainer container)
     {
-        container.Height(50).Row(row =>
+        container.Height(30).Row(row =>
         {
             row.RelativeItem().Column(column =>
             {
@@ -67,11 +67,11 @@ public class ResultPage : IBasePage
                     .Item()
                     .Element(ComposeTable);
                 column
-                    .Spacing(15);
+                    .Spacing(10);
                 column
                     .Item()
                     .AlignCenter()
-                    .Text(ResourceHelper.Instance.GetString("Graphs"))
+                    .Text(ResourceHelper.Instance.GetString("Graphs")) 
                     .Style(semiTitleStyle);
                 column
                     .Spacing(5);
@@ -175,20 +175,19 @@ public class ResultPage : IBasePage
         if (_model.ResultCharts == null || _model.ResultCharts.Count() == 0) return;
         container.Row(row =>
         {
-            row.RelativeItem().Column(column =>
+            row.RelativeItem().AlignCenter().Column(column =>
             {
                 foreach (ChartData chartData in _model.ResultCharts)
                 {
-                    column
-                        .Item()
-                        .PaddingBottom(10)
-                        .Text(chartData.Name)
-                        .Style(semiTitleStyle);
+                    //column
+                    //    .Item()
+                    //    .PaddingBottom(10)
+                    //    .Text(chartData.Name)
+                    //    .Style(semiTitleStyle);
                     column
                         .Item()
                         .Image(ChartGenerator.GenerateChart(chartData));
                 }
-
             });
         });
     }

@@ -32,7 +32,7 @@ public class CustomChartPage : IBasePage
     {
         container.Row(row =>
         {
-            row.RelativeItem().AlignCenter().Height(100).Column(column =>
+            row.RelativeItem().AlignCenter().Height(30).Column(column =>
             {
                 column.Item().Text(text =>
                 {
@@ -58,23 +58,22 @@ public class CustomChartPage : IBasePage
 
     void ComposeChart(IContainer container)
     {
-        if (_model.AdditionalCharts == null || _model.AdditionalCharts.Count == 0) return;
+        if (_model.AdditionalCharts == null || _model.AdditionalCharts.Count() == 0) return;
         container.Row(row =>
         {
-            row.RelativeItem().Column(column =>
+            row.RelativeItem().AlignCenter().Column(column =>
             {
                 foreach (ChartData chartData in _model.AdditionalCharts)
                 {
-                    column
-                        .Item()
-                        .PaddingBottom(10)
-                        .Text(chartData.Name)
-                        .Style(semiTitleStyle);
+                    //column
+                    //    .Item()
+                    //    .PaddingBottom(10)
+                    //    .Text(chartData.Name)
+                    //    .Style(semiTitleStyle);
                     column
                         .Item()
                         .Image(ChartGenerator.GenerateChart(chartData));
                 }
-
             });
         });
     }

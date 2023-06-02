@@ -13,9 +13,9 @@ public static class NormResultReportHelper
 
     public static IEnumerable<ChartDataDefinition> Charts = new List<ChartDataDefinition>()
     {
-        new ChartDataDefinition("Phase Voltage Mean", new List<string>() { "Voltage_Phase1", "Voltage_Phase2", "Voltage_Phase3" } ),
-        new ChartDataDefinition("Phase Voltage Max", new List<string>() { "Voltage_Phase1_Max", "Voltage_Phase2_Max", "Voltage_Phase3_Max" } ),
-        new ChartDataDefinition("Phase Voltage Min", new List<string>() { "Voltage_Phase1_Min", "Voltage_Phase2_Min", "Voltage_Phase3_Min" } )
+        new ChartDataDefinition("Napięcie średnie", new List<string>() { "Voltage_Phase1", "Voltage_Phase2", "Voltage_Phase3" } ),
+        new ChartDataDefinition("Napięcie maksymalne", new List<string>() { "Voltage_Phase1_Max", "Voltage_Phase2_Max", "Voltage_Phase3_Max" } ),
+        new ChartDataDefinition("Napięcie minimalne", new List<string>() { "Voltage_Phase1_Min", "Voltage_Phase2_Min", "Voltage_Phase3_Min" } )
     };
 
     public static List<string> GetKeys(IEnumerable<string>? initKeys)
