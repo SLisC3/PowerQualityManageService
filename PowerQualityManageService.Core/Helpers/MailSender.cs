@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PowerQualityManageService.Model.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -8,18 +9,14 @@ using System.Threading.Tasks;
 namespace PowerQualityManageService.Core.Helpers;
 public static class MailSender
 {
-    public static void SendMail(/* Model with results */ /* Model with attachement probably pdf */ IEnumerable<MailAddress> addressTo)
+    public static async Task<bool> SendMail(MailModel model)
     {
-        // Wyciągnąć dane do logowania
-
         var mailMessage = new MailMessage();
-
-        //mailMessage.SetFrom() Z wyciągnietych wyżej danych 
-
-        // Get body template with subject with overall short results
-
-        //
-
-        mailMessage.SendSmtpAsync();
+        mailMessage.SetFrom("powerqualitymanager@gmail.com", "PQM");
+        mailMessage.SetSubject(model.Title);
+        mailMessage.SetBody(model.Body);
+        model.AddressesTo.ForEach(x => mailMessage.AddTo(x.Mail, x.DisplayName));
+        mailMessage.Attachments.Add(new Attachment(Path.Combine(Directory.GetCurrentDirectory(), "Reports", model.Attachment)));
+        return await mailMessage.SendSmtpAsync();
     }
 }

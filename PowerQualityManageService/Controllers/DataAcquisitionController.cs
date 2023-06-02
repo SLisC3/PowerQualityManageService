@@ -48,9 +48,9 @@ public class DataAcquisitionController : Controller
 
     [HttpPost]
     [Route("Save")]
-    public async Task<ActionResult<int>> Save(string fileName)
+    public async Task<ActionResult<int>> Save(string fileName, string measuringPoint)
     {
-        int res = await _dataManagementService.Save(fileName);
+        int res = await _dataManagementService.Save(fileName, measuringPoint);
         return Ok(res);
     }
 

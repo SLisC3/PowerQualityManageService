@@ -1,20 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using PowerQualityManageService.Core.Helpers;
+﻿using MongoDB.Driver;
 using PowerQualityManageService.Core.Repositories.Abstract;
-using PowerQualityManageService.Core.Services.Abstract;
-using PowerQualityManageService.Infrastructure.Models;
+using PowerQualityManageService.Model.Models;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 public class DataManagementMongoDbRepository : IDataManagementDbRepository
@@ -25,7 +13,7 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         _dataSamples = mongoDbContext.DataSamples;
     }
 
-    public async Task<int> InsertDataFromDataTable(DataTable dt)
+    public async Task<int> InsertDataFromDataTable(DataTable dt, string measuringPoint)
     {
         if (dt == null)
         {
@@ -41,6 +29,7 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
             dictionary.Remove("Flagging");
 
             var sample = new DataSample { 
+                MeasuringPoint= measuringPoint,
                 Date = date, 
                 Flagging = flagging,
                 Data = dictionary };
@@ -52,10 +41,10 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         return samples.Count;
     }
 
-    public async Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate)
+    public async Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate, string measuringPoint)
     {
         var result = await _dataSamples
-            .FindAsync(x => x.Flagging == false && x.Date >= startDate && x.Date <= endDate);
+            .FindAsync(x => x.Flagging == false && x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
             
         if (result == null) { return null; }
         

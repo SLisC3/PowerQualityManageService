@@ -44,7 +44,7 @@ public class DataAcquisitionService : IDataAcquisitionService
         return data;
     }
 
-    public async Task<int> Save(string fileName)
+    public async Task<int> Save(string fileName, string measuringPoint)
     {
         _cache.Set(fileName + "Status", SaveStatus.InProgress);
 
@@ -62,7 +62,7 @@ public class DataAcquisitionService : IDataAcquisitionService
             while (stream.Position < stream.Length)
             {
                 DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 5000); // TODO take from config number of rows 
-                insertedRows += await _dbRepository.InsertDataFromDataTable(dt);
+                insertedRows += await _dbRepository.InsertDataFromDataTable(dt, measuringPoint);
                 dt.Dispose();
             }
             stream.Dispose();

@@ -12,5 +12,5 @@ public interface IDataAcquisitionService
 {
     public Task<string?> Upload(IFormFile file);
     public Task<DataTable?> LoadParseHeaders(string fileName);
-    public Task<int> Save(string fileName);
+    public Task<int> Save(string fileName, string measuringPoint);
 }

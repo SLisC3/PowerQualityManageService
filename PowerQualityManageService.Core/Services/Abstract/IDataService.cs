@@ -1,6 +1,9 @@
-﻿namespace PowerQualityManageService.Core.Services.Abstract;
+﻿
+using PowerQualityManageService.Model.Models;
+
+namespace PowerQualityManageService.Core.Services.Abstract;
 
 public interface IDataService
 {
-    Task<Dictionary<string, IEnumerable<object>>?> GetResults(DateTime startDate, DateTime endDate, List<string> keys);
+    Task<GetSamplesModel> GetSamples(DateTime startDate, DateTime endDate, string measuringPoint, List<string> keys);
 }

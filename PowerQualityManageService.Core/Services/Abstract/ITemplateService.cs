@@ -1,5 +1,4 @@
-﻿using PowerQualityManageService.Infrastructure.Models;
-
+﻿using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Core.Services.Abstract;
 

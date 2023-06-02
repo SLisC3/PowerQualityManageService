@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
-using PowerQualityManageService.Infrastructure.Models;
+using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Controllers;
 

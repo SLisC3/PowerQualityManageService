@@ -1,46 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using MongoDB.Driver;
 using PowerQualityManageService.Core.Repositories.Abstract;
-using PowerQualityManageService.Infrastructure.Models;
-using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
-
+using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
+using PowerQualityManageService.Model.Models;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
-
 public class TemplateRepository : ITemplateRepository
 {
-    private readonly SqlDbContext _context;
-    public TemplateRepository(SqlDbContext context)
+    private readonly IMongoCollection<Template> _templates;
+    public TemplateRepository(IMongoDbContext context)
     {
-        _context = context;
+        _templates = context.Templates;
     }
 
 
     public async Task<Template> AddTemplate(Template template)
     {
-        _context.Templates.Add(template);
-        await _context.SaveChangesAsync();
-        return template;
+        try
+        {
+            await _templates.InsertOneAsync(template);
+            return template;
+        }
+        catch(Exception ex) { return null; }
     }
     public async Task<Template?> GetTemplateById(int id)
     {
-        return await _context.Templates.FirstOrDefaultAsync(x=> x.Id == id);
+        return await _templates.Find(x=> x.Id == id).FirstOrDefaultAsync();
     }
     public async Task<Template?> UpdateTemplate(int id, Template template)
     {
-        var entity = await _context.Templates.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _templates.Find(x => x.Id == id).FirstOrDefaultAsync();
         if (entity == null) { return null; }
         entity.Name = template.Name;
         entity.Description = template.Description;
-        entity.Content = template.Content;  
-        _context.Templates.Update(entity);
+        entity.Charts = template.Charts;  
+        await _templates.ReplaceOneAsync(x=>x.Id == id, entity);
         return entity;
     }
     public async Task<bool> DeleteTemplate(int id)
     {
-        var entity = await _context.Templates.FindAsync(id);
-        if (entity == null) { return false; }
-        _context.Templates.Remove(entity);
+        var res = await _templates.DeleteOneAsync(x=>x.Id == id);    
+        if (res.DeletedCount == 0) { return false; }
         return true;
     }
 }
