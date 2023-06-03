@@ -3,7 +3,7 @@
     "PowerQualityManageService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "Swagger",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

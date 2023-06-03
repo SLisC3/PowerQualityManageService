@@ -1,0 +1,99 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div id="overlay"></div>
+
+<div id="uploadForm" class="popup-form">
+    <h2>Importuj</h2>
+    <div class="p-4 bg-secondary">
+        <form>
+            <div class="row">
+                <div class="col-md-3"> </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="measuringPoint" placeholder="Punkt pomiarowy">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+
+                        <div id="dropArea" style="border: 2px dashed gray; padding: 8px; text-align: center;">
+                            Przeciągnij plik tutaj lub kliknij, aby wybrać plik
+                        </div>
+                        <input id="fileInput" type="file" style="display: none;">
+                        <div id="fileErrorDiv" style="color: red;"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Importuj</button>
+        </div>
+        <div class="col-md-3">
+            <button id="closeUploadFormButton" class="btn btn-outline-primary btn-lg w-100" type="button">Zamknij</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var dropArea = document.getElementById('dropArea');
+    var fileInput = document.getElementById('fileInput');
+
+    dropArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropArea.style.backgroundColor = 'lightgray';
+    });
+
+    dropArea.addEventListener('dragleave', function () {
+        dropArea.style.backgroundColor = '';
+    });
+
+    dropArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropArea.style.backgroundColor = '';
+
+        var files = e.dataTransfer.files;
+        if (files.length > 0) {
+            var file = files[0];
+            if (isFileExtensionAllowed(file)) {
+                fileInput.files = files;
+                dropArea.textContent = file.name;
+                fileErrorDiv.textContent = '';
+            }
+            else {
+                fileErrorDiv.textContent = 'Nieobsługiwany typ pliku.';
+            }
+            // Tutaj możesz wykonać odpowiednie działania na przesłanych plikach
+        }
+    });
+
+    dropArea.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            if (isFileExtensionAllowed(file)) {
+                dropArea.textContent = file.name;
+                fileErrorDiv.textContent = '';
+                // Tutaj możesz wykonać odpowiednie działania na wybranych plikach
+            } else {
+                fileErrorDiv.textContent = 'Nieobsługiwany typ pliku.';
+            }
+        }
+    });
+
+    function isFileExtensionAllowed(file) {
+        var allowedExtensions = ['.csv'];
+        var fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+        return allowedExtensions.includes(fileExtension);
+    }
+</script>

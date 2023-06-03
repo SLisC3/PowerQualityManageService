@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PowerQualityManageService.Models;
 using System.Diagnostics;
-using WebApplication1.Models;
 
 namespace PowerQualityManageService.Controllers;
 public class HomeController : Controller

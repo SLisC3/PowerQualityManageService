@@ -1,0 +1,53 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Import danych</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div style="margin-bottom: 40px;"></div>
+                </div>
+                <div class="row">
+                    <button type="button" id="showUploadFormButton" class="btn btn-primary bg-gradient-primary btn-lg">Importuj dane</button>
+                    @{
+                        await Html.RenderPartialAsync("UploadForm");
+                    }
+                </div>
+            </div>
+            <div class="col">                
+                <div class="card">
+                  <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
+                  </div>
+                    <div class="card-body pt-2">
+                        <a class="card-title h5 d-block text-darker">
+                            Wskazówki
+                        </a>
+                        <p class="card-description mb-4">
+                            Tutaj short instruction co i jak 
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const showFormButton = document.getElementById('showUploadFormButton');
+        const popupForm = document.getElementById('uploadForm');
+        const overlay = document.getElementById('overlay');
+        const closeFormButton = document.getElementById('closeUploadFormButton');
+
+        showFormButton.addEventListener('click', function() {
+          // Pokaż overlay i formularz
+          overlay.style.display = 'block';
+          popupForm.style.display = 'block';
+        });
+
+        closeFormButton.addEventListener('click', function() {
+          // Schowaj overlay i formularz
+          overlay.style.display = 'none';
+          popupForm.style.display = 'none';
+        });
+    </script>
+}
