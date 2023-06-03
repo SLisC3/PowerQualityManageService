@@ -1,13 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PowerQualityManageService.Core.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using System.Globalization;
-using System.IO;
 using PowerQualityManageService.Core.Services.Abstract;
-using PowerQualityManageService.Pages;
-using Microsoft.Extensions.Caching.Memory;
 
 
 namespace PowerQualityManageService.Controllers;
@@ -17,11 +10,9 @@ namespace PowerQualityManageService.Controllers;
 public class DataAcquisitionController : Controller
 {
     private readonly IDataAcquisitionService _dataManagementService;
-    private readonly IMemoryCache _cache;
-    public DataAcquisitionController(IDataAcquisitionService service, IMemoryCache cache)
+    public DataAcquisitionController(IDataAcquisitionService service)
     {
         _dataManagementService = service;
-        _cache = cache;
     }
 
     [HttpGet]
