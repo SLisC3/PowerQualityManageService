@@ -20,6 +20,7 @@ public class TemplateController : Controller
     [HttpGet]
     public IActionResult Index()
     {
+        ViewBag.CurrentArea = "Szablony";
         return View();
     }
 

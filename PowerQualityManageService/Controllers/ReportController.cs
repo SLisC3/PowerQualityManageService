@@ -16,6 +16,13 @@ public class ReportController : Controller
         _reportService = reportService;
     }
 
+    public IActionResult Index()
+    {
+        ViewBag.CurrentArea = "Raporty";
+        return View();
+    }
+
+
     [HttpPost]
     [Route("Generate")]
     public async Task<ActionResult<string>> Generate(int templateId, ResultDefinition resultDefinition)

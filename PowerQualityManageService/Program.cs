@@ -25,7 +25,8 @@ builder.Services.AddScoped<IDataAcquisitionService, DataAcquisitionService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
-builder.Services.AddRazorPages();
+builder.Services.AddMvc();
+builder.Services.AddMemoryCache();
 
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
 builder.Services.AddSingleton<IMongoDbContext, MongoDbContext>();
@@ -57,7 +58,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
 app.Run();

@@ -1,17 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-using MongoDB.Driver;
 using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Core.Utils.Enums;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Runtime.Caching;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerQualityManageService.Core.Services.Concrete;
 public class DataAcquisitionService : IDataAcquisitionService

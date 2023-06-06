@@ -1,0 +1,188 @@
+﻿@using System.Data;
+@{
+    string fileName = "test";
+    DataTable headers = null;
+
+}
+<script src="~/js/alerts.js"></script>
+<script src="~/js/table.js"></script>
+<script src="~/js/loading.js"></script>
+<div class="text-center">
+    <h1 class="display-4">Import danych</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div style="margin-bottom: 40px;"></div>
+                </div>
+                <div class="row">
+                    <button type="button" id="showUploadFormButton" class="btn btn-primary bg-gradient-primary btn-lg">Importuj dane</button>
+                    @{
+                        await Html.RenderPartialAsync("UploadForm");
+                    }
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
+                    </div>
+                    <div class="card-body pt-2">
+                        <a class="card-title h5 d-block text-darker">
+                            Wskazówki
+                        </a>
+                        <p class="card-description mb-4">
+                            Tutaj short instruction co i jak
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="alertsIndex"></div>
+        </div>
+        <div class="row">
+            <div style="margin-bottom: 20px;"></div>
+        </div>
+        <div class="row">
+            <div class="card">
+                <div id="headers" class="table-responsive">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div style="margin-bottom: 20px;"></div>
+        </div>
+        <div id="pushToDbButtonContainer" class="row">
+            <button id="pushToDbFormButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" >Zapis do bazy</button>
+            @{
+                await Html.RenderPartialAsync("PushToDbForm");
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const showFormButton = document.getElementById('showUploadFormButton');
+        const popupForm = document.getElementById('uploadForm');
+        const overlay = document.getElementById('overlay');
+        const closeFormButton = document.getElementById('closeUploadFormButton');
+
+        const pushToDbForm = document.getElementById('pushToDbForm');
+        //const pushToDbFormButtonContainer = document.getElementById('pushToDbButtonContainer');
+        const pushToDbFormButton = document.getElementById('pushToDbFormButton');
+        const pushToDbButton = document.getElementById('pushToDbButton');
+        const closePushToDbFormButton = document.getElementById('closePushToDbFormButton');
+
+        pushToDbFormButton.addEventListener('click', function () {
+            // Pokaż overlay i formularz
+            overlay.style.display = 'block';
+            pushToDbForm.style.display = 'block';
+        });
+
+        closePushToDbFormButton.addEventListener('click', function () {
+            // Pokaż overlay i formularz
+            overlay.style.display = 'none';
+            pushToDbForm.style.display = 'none';
+        });
+
+        showFormButton.addEventListener('click', function () {
+            // Pokaż overlay i formularz
+            overlay.style.display = 'block';
+            popupForm.style.display = 'block';
+        });
+
+        closeFormButton.addEventListener('click', function () {
+            // Schowaj overlay i formularz
+            overlay.style.display = 'none';
+            popupForm.style.display = 'none';
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#pushToDbButton').on('click', function (e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                var url = form.attr('action');
+                var formData = new FormData(form[0]);
+                formData.append('fileName', @fileName);
+                formData.append('measuringPoint', $('#measuringPointControlInput').val());
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                })
+                    .done(function (response) {
+                        console.log('Sukces:', response);
+                        var rezultat = "Poprawnie zapisano " + response + " rekordów";
+                        overlay.style.display = 'none';
+                        pushToDbForm.style.display = 'none';
+                        showSuccessAlert(rezultat,'alertsIndex')
+                    })
+                    .fail(function (error) {
+                        console.log('Błąd żądania AJAX:', error);
+                    });
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#submit').on('click', function (e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                var url = form.attr('action');
+                var files = $('#fileInput').get(0).files;
+                if (files.length === 0) {
+                    showDangerAlert("Nie dodano pliku");
+                }
+                else {
+                    var formData = new FormData(form[0]);
+                    formData.append('fileInput', files[0]);
+                    var ajaxRequest = $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    })
+                        .done(function (response) {
+
+                            console.log('Sukces:', response);
+                            @fileName = response;
+
+                                                                var ajaxRequest2 = $.ajax
+                                ({
+                                    url: '/DataAcquisition/Headers',
+                                    type: 'GET',
+                                    data: {
+                                        fileName: response
+                                    }
+                                }).done(function (response2) {
+                                    console.log('Sukces:', response2);
+
+                                        overlay.style.display = 'none';
+                                    popupForm.style.display = 'none';
+                                    createTable(response2, "headers")
+                                    showSuccessAlert("Poprawnie odczytano dane z pliku", 'alertsIndex')
+                                    var button = document.getElementById('pushToDbFormButton');
+                                    button.style.display = 'inline-block';
+                                    //button.style.display = 'inline-block';
+                                }).fail(function (error2) {
+                                    console.log('Błąd żądania AJAX:', error2);
+
+                                });
+
+                        })
+                        .fail(function (error) {
+
+                            console.log('Błąd żądania AJAX:', error);
+                            showDangerAlert(error, 'alerts');
+                        });
+
+                }
+            });
+        });
+    </script>
+}
