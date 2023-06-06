@@ -5,19 +5,36 @@
 <script src="~/js/alerts.js"></script>
 <script src="~/js/table.js"></script>
 <script src="~/js/loading.js"></script>
+
 <div class="text-center">
     <h1 class="display-4">Podgląd</h1>
     <div class="container">
         <div class="row">
+            <div id="alertPreview"></div>
+        </div>
+        <div class="row">
             <div class="col">
                 <div class="row">
-                    <div style="margin-bottom: 40px;"></div>
-                </div>
-                <div class="row">
-                    <button type="button" id="showUploadFormButton" class="btn btn-primary bg-gradient-primary btn-lg">Importuj dane</button>
-                    @{
-                        await Html.RenderPartialAsync("UploadForm");
-                    }
+                    <form method="get" asp-area="" asp-controller="Preview" asp-action="Data">
+                        <div class="row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="measuringPointPreview" name="measuringPoint" placeholder="Punkt pomiarowy">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <input class="form-control datepicker" placeholder="Data rozpoczęcia" type="datetime-local" id="startDatePreview" name="startDate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <input class="form-control datepicker" placeholder="Data rozpoczęcia" type="datetime-local" id="endDatePreview" name="endDate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button id="search" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Wyszukaj</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="col">
@@ -29,33 +46,85 @@
                             Wskazówki
                         </a>
                         <p class="card-description mb-4">
-                            Tutaj short instruction co i jak
+                            Tutaj krótka instrukcja co i jak
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div id="alertsIndex"></div>
-        </div>
+
         <div class="row">
             <div style="margin-bottom: 20px;"></div>
         </div>
         <div class="row">
             <div class="card">
-                <div id="headers" class="table-responsive">
+                <div id="tablePreview" class="table-responsive">
                 </div>
             </div>
         </div>
         <div class="row">
             <div style="margin-bottom: 20px;"></div>
         </div>
-        <div id="pushToDbButtonContainer" class="row">
-            <button id="pushToDbFormButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" >Zapis do bazy</button>
-            @{
-                await Html.RenderPartialAsync("PushToDbForm");
-            }
-        </div>
     </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+
+        //const Polish = require("flatpickr/dist/l10n/pl.ts");
+
+        config = {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            altInput: true,
+            defaultHour: 0
+        }
+        flatpickr("#startDatePreview", config);
+        flatpickr("#endDatePreview", config);
+    </script>
+    <script>
+        const search = document.getElementById('search');
+    </script>
+    <script>
+        $(function () {
+            $('#search').on('click', function (e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                var url = form.attr('action');
+                var formData = {
+                    measuringPoint: $('#measuringPointPreview').val(),
+                    startDate: $('#startDatePreview').val(),
+                    endDate: $('#endDatePreview').val(),
+                };
+                console.log('formData:', formData);
+                var mp = $('#measuringPointPreview').val()
+                console.log('mp:', mp);
+                var request = $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        measuringPoint: $('#measuringPointPreview').val(),
+                        startDate: $('#startDatePreview').val(),
+                        endDate: $('#endDatePreview').val()
+                    }
+
+                    //processData: false,
+                    //contentType: false
+                })
+                    .done(function (response) {
+                        console.log('Sukces:', response);
+                        createTable(response, "tablePreview")
+                    })
+                    .fail(function (error) {
+                        console.log('Błąd żądania AJAX:', error);
+                        showDangerAlert(error, 'alertPreview')
+                    });
+                console.log('request:', request);
+            });
+        });
+    </script>
+}
 

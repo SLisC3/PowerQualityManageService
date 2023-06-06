@@ -7,12 +7,12 @@ namespace PowerQualityManageService.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DataManagementController : Controller
+public class PreviewController : Controller
 {
     private readonly IDataService _dataManagementService;
     private readonly IDataManagementDbRepository _rep;
 
-    public DataManagementController(IDataService dataManagementService, IDataManagementDbRepository rep)
+    public PreviewController(IDataService dataManagementService, IDataManagementDbRepository rep)
     {
         _dataManagementService = dataManagementService;
         _rep = rep;
@@ -27,13 +27,16 @@ public class DataManagementController : Controller
 
     [HttpGet]
     [Route("Data")]
-    public async Task<ActionResult<DataTable>> Data(DateTime startDate, DateTime endDate, string measuringPoint)
+    public async Task<ActionResult<DataTable>> Data(string measuringPoint, DateTime startDate, DateTime endDate)
     {
-        var res = _dataManagementService.GetSamplesDt(startDate, endDate, measuringPoint, null);
-        return Ok();
+        var res = await _dataManagementService.GetSamplesDt(startDate, endDate, measuringPoint, null);
+        return res != null ? Ok(res) : NotFound();
     }
 
     [HttpGet]
     [Route("MeasuringPoints")]
-    public async Task<ActionResult<List>
-
+    public async Task<ActionResult<List<string>>> MeasuringPoints()
+    {
+        throw new NotImplementedException();
+    }
+}

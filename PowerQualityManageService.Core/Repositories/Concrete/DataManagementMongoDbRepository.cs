@@ -51,9 +51,9 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         return await result.ToListAsync();
     }
 
-    public async Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate)
+    public async Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate, string measuringPoint)
     {
-        var samples = await  _dataSamples.FindAsync(x => x.Flagging == false && x.Date >= startDate && x.Date <= endDate);
+        var samples = await  _dataSamples.FindAsync(x => x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
         var groupedSamples = samples.ToEnumerable().GroupBy(x => x.Date).Select(g => new { Date = g.Key, Data = g.SelectMany(x => x.Data!).Distinct().ToDictionary(kv => kv.Key, kv => kv.Value) }).ToList();
 
         if(groupedSamples.Count == 0) { return null; }

@@ -1,6 +1,7 @@
 ﻿using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Model.Models;
+using System.Data;
 
 namespace PowerQualityManageService.Core.Services.Concrete;
 
@@ -12,6 +13,12 @@ public partial class DataService : IDataService
     {
         _dataManagementRepository = dataManagementRepository;
     }
+
+    public Task<List<string>> GetMeasuringPoints()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<GetSamplesModel> GetSamples(DateTime startDate, DateTime endDate, string measuringPoint, List<string> keys)
     {
         IEnumerable<DataSample>? samples = await _dataManagementRepository.GetDataSamples(startDate, endDate, measuringPoint);
@@ -23,5 +30,10 @@ public partial class DataService : IDataService
             chosenValues.Add(key, groupedSamples.Select(x => x.Data.TryGetValue(key, out object? value) ? value : null).ToList());
         }
         return new GetSamplesModel() { DataLabels = groupedSamples.Select(x=>x.Date), Samples = chosenValues};
+    }
+
+    public async Task<DataTable?> GetSamplesDt(DateTime startDate, DateTime endDate, string measuringPoint, List<string>? keys)
+    {
+        return await _dataManagementRepository.GetDataSamplesDT(startDate,endDate,measuringPoint);
     }
 }
