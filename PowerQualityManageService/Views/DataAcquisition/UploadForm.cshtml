@@ -3,45 +3,47 @@
 *@
 @{
 }
-
+<script src="~/js/alerts.js"></script>
 <div id="overlay"></div>
 
 <div id="uploadForm" class="popup-form">
     <h2>Importuj</h2>
     <div class="p-4 bg-secondary">
-        <form>
+        <form method="post" asp-area="" asp-controller="DataAcquisition" asp-action="Upload">
             <div class="row">
                 <div class="col-md-3"> </div>
-                <div class="col-md-3">
+                
+                <div class="col-md-6">
+                    <div id="dropArea" style="border: 2px dashed gray; padding: 8px; text-align: center;">
+                        Przeciągnij plik tutaj lub kliknij, aby wybrać plik
+                    </div>
                     <div class="form-group">
-                        <input type="email" class="form-control" id="measuringPoint" placeholder="Punkt pomiarowy">
+                        <input type="file" id="fileInput" name="fileInput" style="display: none;">
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"> </div>
 
+                <div class="col-md-6">
+                    <div id="alerts"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"></div>
                 <div class="col-md-3">
-                    <div class="form-group">
-
-                        <div id="dropArea" style="border: 2px dashed gray; padding: 8px; text-align: center;">
-                            Przeciągnij plik tutaj lub kliknij, aby wybrać plik
-                        </div>
-                        <input id="fileInput" type="file" style="display: none;">
-                        <div id="fileErrorDiv" style="color: red;"></div>
-                    </div>
+                    <button id="submit" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Odczytaj dane</button>
+                </div>
+                <div class="col-md-3">
+                    <button id="closeUploadFormButton" class="btn btn-outline-primary btn-lg w-100" type="button">Anuluj</button>
                 </div>
             </div>
         </form>
     </div>
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Importuj</button>
-        </div>
-        <div class="col-md-3">
-            <button id="closeUploadFormButton" class="btn btn-outline-primary btn-lg w-100" type="button">Zamknij</button>
-        </div>
-    </div>
+
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     var dropArea = document.getElementById('dropArea');
     var fileInput = document.getElementById('fileInput');
@@ -65,10 +67,10 @@
             if (isFileExtensionAllowed(file)) {
                 fileInput.files = files;
                 dropArea.textContent = file.name;
-                fileErrorDiv.textContent = '';
+                
             }
             else {
-                fileErrorDiv.textContent = 'Nieobsługiwany typ pliku.';
+                showDangerAlert('Nieobsługiwany typ pliku.','alerts');
             }
             // Tutaj możesz wykonać odpowiednie działania na przesłanych plikach
         }
@@ -83,10 +85,10 @@
             var file = fileInput.files[0];
             if (isFileExtensionAllowed(file)) {
                 dropArea.textContent = file.name;
-                fileErrorDiv.textContent = '';
+            
                 // Tutaj możesz wykonać odpowiednie działania na wybranych plikach
             } else {
-                fileErrorDiv.textContent = 'Nieobsługiwany typ pliku.';
+                showDangerAlert('Nieobsługiwany typ pliku.','alerts');
             }
         }
     });
@@ -96,4 +98,7 @@
         var fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
         return allowedExtensions.includes(fileExtension);
     }
+
+    
+
 </script>

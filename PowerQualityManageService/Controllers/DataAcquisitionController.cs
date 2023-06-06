@@ -18,28 +18,31 @@ public class DataAcquisitionController : Controller
     [HttpGet]
     public ActionResult Index()
     {
+        ViewBag.CurrentArea = "Import danych";
         return View();
     }
 
     [HttpPost]
     [Route("Upload")]
-    public async Task<ActionResult<string?>> Upload(IFormFile file)
+    public async Task<ActionResult<string?>> Upload([FromForm] IFormFile fileInput)
     {
-        string? res = await _dataManagementService.Upload(file);
+        string? res = await _dataManagementService.Upload(fileInput);
+        if (res != null) { ViewBag.fileName = res; }
         return res == null ? NotFound() : Ok(res);
     }
 
     [HttpGet]
     [Route("Headers")]
-    public async Task<ActionResult<DataTable?>> Headers(string fileName)
+    public async Task<ActionResult<DataTable?>> Headers([FromQuery] string fileName)
     {
         var dt = await _dataManagementService.LoadParseHeaders(fileName);
+        if (dt != null) { ViewBag.headers = dt; }
         return dt == null ? NotFound() : Ok(dt);
     }
 
     [HttpPost]
     [Route("Save")]
-    public async Task<ActionResult<int>> Save(string fileName, string measuringPoint)
+    public async Task<ActionResult<int>> Save([FromForm] string fileName, [FromForm] string measuringPoint)
     {
         int res = await _dataManagementService.Save(fileName, measuringPoint);
         return Ok(res);

@@ -17,18 +17,23 @@ public class DataManagementController : Controller
         _dataManagementService = dataManagementService;
         _rep = rep;
     }
+
+    public IActionResult Index()
+    {
+        ViewBag.CurrentArea = "Podgląd";
+        return View();
+    }
+
+
     [HttpGet]
     [Route("Data")]
-    public async Task<ActionResult> GetData(DateTime startDate, DateTime endDate, string measuringPoint)
+    public async Task<ActionResult<DataTable>> Data(DateTime startDate, DateTime endDate, string measuringPoint)
     {
-        var keys = new List<string>() { "THD_PhaseToPhase31", "Frequency" };
-        var res = _dataManagementService.GetSamples(startDate, endDate, measuringPoint, keys);
+        var res = _dataManagementService.GetSamplesDt(startDate, endDate, measuringPoint, null);
         return Ok();
     }
+
     [HttpGet]
-    [Route("Test")]
-    public async Task<ActionResult<DataTable>> Test (DateTime startDate, DateTime endDate)
-    {
-        return Ok(await _rep.GetDataSamplesDT(startDate, endDate));
-    }
-}
+    [Route("MeasuringPoints")]
+    public async Task<ActionResult<List>
+

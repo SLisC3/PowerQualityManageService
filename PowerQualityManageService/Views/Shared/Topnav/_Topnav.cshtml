@@ -1,8 +1,12 @@
 ﻿<!-- Topnav -->
-<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+@{
+    
+}
+<nav class="navbar navbar-top navbar-expand navbar-dark bg-gradient-primary border-bottom">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <a class="h4 mb-0 text-white d-none d-lg-inline-block" href="/">PowerQualityManager</a>
+            <div class="h2 mb-0 text-white" href="/">@ViewBag.CurrentArea</div>
+
             <partial name="Topnav/_Search" />
             <partial name="Topnav/_Links" />
             <partial name="Topnav/_Settings"/>
