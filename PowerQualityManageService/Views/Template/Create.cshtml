@@ -1,0 +1,227 @@
+﻿@model TemplateModel
+@{
+
+}
+
+@using (Html.BeginForm("Create", "Template", FormMethod.Post))
+{
+    <div id="overlay"></div>
+
+    <div class="p-4 bg-secondary">
+        <h2>Dodaj nowy szablon</h2>
+
+        <div class="row" id="alertsCreate">
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Nazwa</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">Opis</label>
+                        <input asp-for="Description" class="form-control" />
+                    </div>
+                    <div id="hiddenInputs">
+                    </div>
+                    <div id="chartsContainer">
+                        <div class="card">
+                            <div class="table-responsive">
+                                <div id="tableContainer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*   <div class="form-group">
+                <label asp-for="Description" class="control-label">Opis</label>
+                <input asp-for="Description" class="form-control" />
+                </div>*@
+
+
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary bg-gradient-primary btn-lg w-100" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+}
+
+<script>
+    var chartsData = [];
+
+    function deleteChart(id) {
+        console.log("Deleteing Id", id)
+        if (id >= 0) {
+            chartsData.splice(id, 1);
+            CreateTable();
+        }
+    }
+
+    // Dodawanie nowego elementu do chartsData
+    function addChart(keye,val) {
+        console.log("Key", keye);
+        console.log("val", val)
+        var newChart = {};
+        newChart[keye] = val; // Nowy element słownika
+        console.log("newChart", newChart)
+        chartsData.push(newChart);
+        console.log("charts", chartsData)
+        CreateTable();
+    }
+</script>
+
+<script>
+    window.onload = function () {
+        CreateTable();
+    }
+
+</script>
+<script>
+    document.getElementById("addChartButton").addEventListener("click", function () {
+        var container = document.getElementById("chartsContainer");
+        var chartIndex = container.getElementsByClassName("chart").length;
+
+        var chartDiv = document.createElement("div");
+        chartDiv.classList.add("chart");
+
+        var heading = document.createElement("h3");
+        heading.textContent = "Chart " + chartIndex;
+
+        chartDiv.appendChild(heading);
+
+        container.appendChild(chartDiv);
+    });
+</script>
+
+
+
+<script>
+    function CreateTable() {
+        var tableContainer = document.getElementById("tableContainer");
+        tableContainer.innerHTML = "";
+        var inputContainer = document.getElementById("hiddenInputs");
+        inputContainer.innerHTML = "";
+
+
+
+        // Ustawianie atrybutów i właściwości dla elementu <input>
+
+
+        var table = document.createElement("table");
+        table.className = "table align-items-center mb-0"
+
+        var head = document.createElement("thead");
+
+        var headerRow = document.createElement("tr");
+        var headerCell1 = document.createElement("th");
+        headerCell1.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+        headerCell1.textContent = "Lp";
+        headerRow.appendChild(headerCell1);
+        var headerCell2 = document.createElement("th");
+        headerCell2.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+        headerCell2.textContent = "Nazwa wykresu";
+        headerRow.appendChild(headerCell2);
+        var headerCell3 = document.createElement("th");
+        headerCell3.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+        headerCell3.textContent = "Nazwa wyświetlanej wartości";
+        headerRow.appendChild(headerCell3);
+        var headerCell4 = document.createElement("th");
+        headerCell4.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+        headerCell4.textContent = "-";
+        headerRow.appendChild(headerCell4);
+
+        head.appendChild(headerRow);
+        table.appendChild(head);
+        var length = chartsData.length
+        // Tworzenie wierszy z danymi
+        for (var i = 0; i < length; i++) {
+            var dataRow = document.createElement("tr");
+            var lpCell = document.createElement("td");
+            lpCell.textContent = i + 1;
+            dataRow.appendChild(lpCell);
+            for (var key in chartsData[i]) {
+                var inputElement = document.createElement("input");
+                inputElement.type = "text";
+                inputElement.className = "form-control";
+                inputElement.type = "hidden";
+                inputElement.name = "Charts[" + i + "]." + key;
+                inputElement.value = chartsData[i][key];
+                inputContainer.appendChild(inputElement);
+                var dataCell1 = document.createElement("td");
+                var dataCell2 = document.createElement("td");
+                dataCell1.textContent = key;
+                dataCell2.textContent = chartsData[i][key];
+                dataRow.appendChild(dataCell1);
+                dataRow.appendChild(dataCell2);
+            }
+            var deleteCell = document.createElement("td");
+            var button = document.createElement("button");
+            button.className = "btn btn-outline-primary btn-sm w-100";
+            button.id = i;
+            button.type = "button";
+            button.textContent = "Usuń";
+            button.addEventListener("click", function () {
+                deleteChart(this.id);
+                console.log("Przycisk został kliknięty");
+            });
+            deleteCell.appendChild(button);
+            dataRow.appendChild(deleteCell)
+            table.appendChild(dataRow);
+
+
+
+
+
+        }
+
+        var dataRow = document.createElement("tr");
+        var lpCell = document.createElement("td");
+        lpCell.textContent = length + 1;
+        dataRow.appendChild(lpCell);
+        var dataCell1 = document.createElement("td");
+        var inputKey = document.createElement("input");
+        inputKey.type = "text";
+        inputKey.id = "inputKey";
+        inputKey.className = "form-control";
+        inputKey.textContent = "Nazwa wykresu";
+        dataCell1.appendChild(inputKey);
+        var dataCell2 = document.createElement("td");
+        var inputValue = document.createElement("input");
+        inputValue.type = "text";
+        inputValue.id = "inputValue";
+        inputValue.className = "form-control";
+        inputValue.textContent = "Nazwa wartości";
+        dataCell2.appendChild(inputValue);
+        dataRow.appendChild(dataCell1);
+        dataRow.appendChild(dataCell2);
+
+        var addCell = document.createElement("td");
+        var addButton = document.createElement("button");
+        addButton.className = "btn btn-primary bg-gradient-primary btn-lg w-100";
+        addButton.type = "button";
+        addButton.textContent = "Dodaj";
+        addButton.addEventListener("click", function () {
+            console.log("Przycisk dodawnia został kliknięty");
+            var key = document.getElementById("inputKey").value;
+            console.log("AddKey",key);
+            var value = document.getElementById("inputValue").value;
+            console.log("AddValue",value);
+            addChart(key, value)
+        });
+        addCell.appendChild(addButton);
+        dataRow.appendChild(addCell)
+        table.appendChild(dataRow);
+
+        // Dodanie tabeli do kontenera
+        tableContainer.appendChild(table);
+
+
+    }
+
+</script>
