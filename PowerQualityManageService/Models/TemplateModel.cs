@@ -10,3 +10,11 @@ public class TemplateModel
     public string Description { get; set; } 
     public List<Dictionary<string,string>> Charts { get; set; } = new List<Dictionary<string, string>>();
 }
+
+public class TemplateEditModel
+{
+    public string PreviousName { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public List<Dictionary<string, string>> Charts { get; set; } = new List<Dictionary<string, string>>();
+}

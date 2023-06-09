@@ -1,17 +1,17 @@
-﻿@model TemplateModel
+﻿@model TemplateEditModel
 @{
-
+    string previousName = Model.PreviousName;
 }
 
 <script src="~/js/alerts.js"></script>
 <script src="~/js/table.js"></script>
 
-@using (Html.BeginForm("Create", "Template", FormMethod.Post))
+@using (Html.BeginForm("Edit", "Template", FormMethod.Post))
 {
     <div id="overlay"></div>
 
     <div class="p-4 bg-secondary">
-        <h2>Dodaj nowy szablon</h2>
+        <h2>Edytuj szablon</h2>
 
         <div class="row" id="alertsCreate">
         </div>
@@ -23,6 +23,7 @@
                     <div class="form-group">
                         <label asp-for="Name" class="control-label">Nazwa</label>
                         <input asp-for="Name" class="form-control" />
+                        <input asp-for="PreviousName" value="@Model.PreviousName" class="form-control" type="hidden" />
                     </div>
                     <div class="form-group">
                         <label asp-for="Description" class="control-label">Opis</label>
@@ -39,7 +40,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Stwórz" class="btn btn-primary bg-gradient-primary btn-lg w-100" />
+                        <input type="submit" value="Edytuj" class="btn btn-primary bg-gradient-primary btn-lg w-100" />
                     </div>
                 </form>
             </div>
@@ -49,7 +50,7 @@
 }
 <script src="~/js/table.js"></script>
 <script>
-    var chartsData = [];
+     var chartsData = @Html.Raw(Json.Serialize(Model.Charts));
 
     function deleteChart(id) {
         console.log("Deleteing Id", id)
@@ -60,7 +61,7 @@
     }
 
     // Dodawanie nowego elementu do chartsData
-    function addChart(keye,val) {
+    function addChart(keye, val) {
         console.log("Key", keye);
         console.log("val", val)
         var newChart = {};

@@ -25,3 +25,4 @@ function createTable(data, id) {
     var tableContainer = document.getElementById(id);
     tableContainer.appendChild(table);
 }
+

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Model.Models;
@@ -11,10 +13,12 @@ namespace PowerQualityManageService.Controllers;
 public class TemplateController : Controller
 {
     private readonly ITemplateService _templateService;
+    private readonly IMapper _mapper;
 
-    public TemplateController(ITemplateService templateService)
+    public TemplateController(ITemplateService templateService,IMapper mapper)
     {
         _templateService = templateService;
+        _mapper = mapper;
     }
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -35,16 +39,28 @@ public class TemplateController : Controller
     [Route("Create")]
     public async Task<ActionResult> Create([FromForm] TemplateModel template /*FormCollection collection*/)
     {
-        //var res = await _templateService.AddTemplate(template);
+        var res = await _templateService.AddTemplate(
+            new Template() 
+            {
+                Name = template.Name, 
+                Description = template.Description, 
+                Charts = template.Charts.ToListOfAdvancedCharts()
+            }
+            );
+        if(res==null) return View("Error");
+        ViewBag.Templates = await _templateService.GetTemplates();
         return View("Index");
         
     }
 
-    [HttpDelete]
-    [Route("Template")]
-    public async Task<ActionResult> Template(string name)
+    [HttpGet]
+    [Route("Delete")]
+    public async Task<ActionResult> Delete(string name)
     {
-        return await _templateService.DeleteTemplate(name) == true ? Ok() : NotFound("Nie znaleziono");
+        bool res =  await _templateService.DeleteTemplate(name);
+        if (res == false) return View("Error");
+        ViewBag.Templates = await _templateService.GetTemplates();
+        return View("Index");
     }
 
     [HttpGet]
@@ -55,10 +71,30 @@ public class TemplateController : Controller
         return  res != null ? Ok(res) : NotFound("Nie znaleziono");
     }
 
-    [HttpPut]
-    [Route("Template")]
-    public async Task<ActionResult> Template(string name, Template template)
+
+    [HttpGet]
+    [Route("Edit")]
+    public async Task<ActionResult> Edit(string name)
     {
-        return await _templateService.EditTemplate(name, template) != null? Ok() : BadRequest("Nie udało się edytować");
+        var res = await _templateService.GetTemplateByName(name);
+        if(res==null) return View("Error");
+        return View(new TemplateEditModel() {PreviousName=res.Name, Name=res.Name,Description=res.Description,Charts = res.Charts.ToListOfSimpleCharts()});
+    }
+
+    [HttpPost]
+    [Route("Edit")]
+    public async Task<ActionResult> Edit([FromForm]TemplateEditModel template)
+    {
+
+        var result = await _templateService.EditTemplate(template.PreviousName,
+            new Template()
+            {
+                Name = template.Name,
+                Description = template.Description,
+                Charts = template.Charts.ToListOfAdvancedCharts()
+            });
+        if(result==null) return View("Error");
+        ViewBag.Templates = await _templateService.GetTemplates();
+        return View("Index");
     }
 }

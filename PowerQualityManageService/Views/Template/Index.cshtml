@@ -6,6 +6,7 @@
 <script src="~/js/alerts.js"></script>
 <script src="~/js/table.js"></script>
 <script src="~/js/loading.js"></script>
+<script src="~/js/buttons.js"></script>
 <div class="text-center">
     <h1 class="display-4">Podgląd</h1>
     <div class="container">
@@ -25,8 +26,6 @@
                     <button id="showAddNewTemplateFormButton" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="location.href='@Url.Action("Create", "Template")'">Dodaj nowy szablon</button>
                 </div>
             </div>
-
-
             <div class="col">
                 <div class="card">
                     <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
@@ -65,11 +64,11 @@
         <div class="row">
 
             <div class="col">
-                <button id="showEditTemplateFormButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button">Edytuj</button>
+                <button id="showEditTemplateFormButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToEdit()">Edytuj</button>
             </div>
 
             <div class="col">
-                <button id="deleteTemplateButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button">Usuń</button>
+                <button id="deleteTemplateButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToDelete()">Usuń</button>
             </div>
 
         </div>
@@ -83,95 +82,33 @@
 
 @section Scripts {
     <script>
-        function hideBtn(id) {
-            var button = document.getElementById(id);
-            button.style.display = 'none';
+        function redirectToEdit() {
+            var inputValue = document.getElementById("templates").value;
+            var url = '@Url.Action("Edit", "Template")' + '?name=' + encodeURIComponent(inputValue);
+            location.href = url;
         }
-    </script>
-    <script>
-        function unhideBtn(id) {
-            var button = document.getElementById(id);
-            button.style.display = 'inline-block';
+        function redirectToDelete() {
+            var inputValue = document.getElementById("templates").value;
+            console.log("Val", inputValue);
+            var url = '@Url.Action("Delete", "Template")' + '?name=' + encodeURIComponent(inputValue);
+            location.href = url;
         }
     </script>
     <script>
         function templateSelected(){
             var val = document.getElementById("templates").value;
+            currentTemplate = val;
+            console.log("Wartość",val)
             if(val!=null){
-                unhideBtn('editTemplate');
-                unhideBtn('deleteTemplate');
+                unhideBtn('showEditTemplateFormButton');
+                unhideBtn('deleteTemplateButton');
             }
             else{
-                hideBtn('editTemplate');
-                hideBtn('deleteTemplate');
+                hideBtn('showEditTemplateFormButton');
+                hideBtn('deleteTemplateButton');
             }
             console.log("Wartość", val)
         }
     </script> 
-
-    <script>
-        //const overlay = document.getElementById('overlay');
-
-        //const editTemplateForm = document.getElementById('editTemplateForm');
-        //const addNewTemplateForm = document.getElementById('addNewTemplateForm');
-
-        //const closeEditTemplateFormButton = document.getElementById('closeEditTemplateFormButton');
-        //const closeAddNewTemplateFormButton = document.getElementById('closeAddNewTemplateFormButton');
-
-        //const showEditTemplateFormButton = document.getElementById('showEditTemplateFormButton');
-        //const showAddNewTemplateFormButton = document.getElementById('showAddNewTemplateFormButton');
-
-
-        //showEditTemplateFormButton.addEventListener('click', function () {
-        //    // Pokaż overlay i formularz
-        //    overlay.style.display = 'block';
-        //    editTemplateForm.style.display = 'block';
-        //});
-
-        //showAddNewTemplateFormButton.addEventListener('click', function () {
-        //    // Pokaż overlay i formularz
-        //    overlay.style.display = 'block';
-        //    addNewTemplateForm.style.display = 'block';
-        //});
-
-        //closeEditTemplateFormButton.addEventListener('click', function () {
-        //    // Schowaj overlay i formularz
-        //    overlay.style.display = 'none';
-        //    editTemplateForm.style.display = 'none';
-        //});
-
-        //closeAddNewTemplateFormButton.addEventListener('click', function () {
-        //    // Schowaj overlay i formularz
-        //    overlay.style.display = 'none';
-        //    addNewTemplateForm.style.display = 'none';
-        //});
-    </script>
-
-
-    <script>
-        //$(function () {
-        //    $('#deleteTemplateButton').on('click', function (e) {
-        //        e.preventDefault();
-        //        var val = document.getElementById("templates").value;
-        //        $.ajax({
-        //            url: 'Template/Template',
-        //            type: 'Delete',
-        //            data: {
-        //                name: val
-        //            },
-        //            processData: false,
-        //            contentType: false
-        //        })
-        //            .done(function (response) {
-        //                console.log('Sukces:', response);
-        //                var rezultat = "Poprawnie usunięto szablon: " + val;
-        //                showSuccessAlert(rezultat, 'alertsTemplate')
-        //            })
-        //            .fail(function (error) {
-        //                console.log('Błąd żądania AJAX:', error);
-        //            });
-        //    });
-        //});
-    </script>
 }
 
