@@ -1,48 +1,29 @@
 ﻿@using System.Data;
+@using PowerQualityManageService.Model.Models;
 @{
-
+    List<PowerQualityManageService.Model.Models.Template> templates = null;
 }
 <script src="~/js/alerts.js"></script>
 <script src="~/js/table.js"></script>
 <script src="~/js/loading.js"></script>
+<script src="~/js/buttons.js"></script>
 <div class="text-center">
     <h1 class="display-4">Podgląd</h1>
     <div class="container">
+
+        @*Sekcja Alertów*@
+        <div class="row">
+            <div id="alertTemplate"></div>
+        </div>
+
+        @*Sekcja 1 - Notka po prawej po lewej funkcyjny*@
         <div class="row">
             <div class="col">
                 <div class="row">
                     <div style="margin-bottom: 40px;"></div>
                 </div>
                 <div class="row">
-                    <form method="post" asp-area="" asp-controller="DataAcquisition" asp-action="Upload">
-                        <div class="row">
-                            <div class="col-md-3"> </div>
-                            <div class="col-md-6">
-                                <div id="dropArea" style="border: 2px dashed gray; padding: 8px; text-align: center;">
-                                    Przeciągnij plik tutaj lub kliknij, aby wybrać plik
-                                </div>
-                                <div class="form-group">
-                                    <input type="file" id="fileInput" name="fileInput" style="display: none;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3"> </div>
-
-                            <div class="col-md-6">
-                                <div id="alerts"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3">
-                                <button id="submit" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Odczytaj dane</button>
-                            </div>
-                            <div class="col-md-3">
-                                <button id="closeUploadFormButton" class="btn btn-outline-primary btn-lg w-100" type="button">Anuluj</button>
-                            </div>
-                        </div>
-                    </form>
+                    <button id="showAddNewTemplateFormButton" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="location.href='@Url.Action("Create", "Template")'">Dodaj nowy szablon</button>
                 </div>
             </div>
             <div class="col">
@@ -60,21 +41,74 @@
                 </div>
             </div>
         </div>
+
+        @*Sekcja 2 - Lista Szablonów*@
         <div class="row">
-            <div id="alertsPreview"></div>
+            <label for="templates"> Dostępne szablony: </label>
+            <select id="templates" onchange="templateSelected()" class="form-control" name="templates" placeholder="Wybierz szablon" multiple>
+                @{
+                    templates = ViewBag.Templates;
+                    foreach (PowerQualityManageService.Model.Models.Template temp in templates)
+                    {
+                        <option value="@temp.Name">@temp.Name</option>
+                    }
+                }
+            </select>
         </div>
+
         <div class="row">
             <div style="margin-bottom: 20px;"></div>
         </div>
+
+        @*Sekcja 3 - przyciski*@
         <div class="row">
-            <div class="card">
-                <div id="tablePreview" class="table-responsive">
-                </div>
+
+            <div class="col">
+                <button id="showEditTemplateFormButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToEdit()">Edytuj</button>
             </div>
+
+            <div class="col">
+                <button id="deleteTemplateButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToDelete()">Usuń</button>
+            </div>
+
         </div>
+
         <div class="row">
             <div style="margin-bottom: 20px;"></div>
         </div>
+
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function redirectToEdit() {
+            var inputValue = document.getElementById("templates").value;
+            var url = '@Url.Action("Edit", "Template")' + '?name=' + encodeURIComponent(inputValue);
+            location.href = url;
+        }
+        function redirectToDelete() {
+            var inputValue = document.getElementById("templates").value;
+            console.log("Val", inputValue);
+            var url = '@Url.Action("Delete", "Template")' + '?name=' + encodeURIComponent(inputValue);
+            location.href = url;
+        }
+    </script>
+    <script>
+        function templateSelected(){
+            var val = document.getElementById("templates").value;
+            currentTemplate = val;
+            console.log("Wartość",val)
+            if(val!=null){
+                unhideBtn('showEditTemplateFormButton');
+                unhideBtn('deleteTemplateButton');
+            }
+            else{
+                hideBtn('showEditTemplateFormButton');
+                hideBtn('deleteTemplateButton');
+            }
+            console.log("Wartość", val)
+        }
+    </script> 
+}
 

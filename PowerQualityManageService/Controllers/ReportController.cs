@@ -25,13 +25,13 @@ public class ReportController : Controller
 
     [HttpPost]
     [Route("Generate")]
-    public async Task<ActionResult<string>> Generate(int templateId, ResultDefinition resultDefinition)
+    public async Task<ActionResult<string>> Generate(string templateName, ResultDefinition resultDefinition)
     {
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        string? fileName = await _reportService.GenerateReport(templateId, resultDefinition);
+        string? fileName = await _reportService.GenerateReport(templateName, resultDefinition);
         
         stopwatch.Stop();
         TimeSpan czasWykonania = stopwatch.Elapsed;

@@ -1,6 +1,7 @@
 ﻿using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Model.Models;
+using System.ComponentModel;
 
 namespace PowerQualityManageService.Core.Services.Concrete;
 
@@ -13,27 +14,25 @@ public class TemplateService : ITemplateService
         _templateRepository = templateRepository;
     }
 
-    public async Task<Template?> ExtendTemplate(int id, ChartDataDefinition chart) 
+    public async Task<List<Template>> GetTemplates()
     {
-        var template = await _templateRepository.GetTemplateById(id);
-        if (template == null) return null;
-        template.Charts.Append(chart);
-        return await _templateRepository.UpdateTemplate(id, template);
+        return await _templateRepository.GetTemplates();
     }
-    public async Task<Template> AddTemplate(Template template)
+
+    public async Task<Template?> AddTemplate(Template template)
     {
         return await _templateRepository.AddTemplate(template);
     }
-    public async Task<Template?> GetTemplateById(int id)
+    public async Task<Template?> GetTemplateByName(string name)
     {
-        return await _templateRepository.GetTemplateById(id);
+        return await _templateRepository.GetTemplateByName(name);
     }
-    public async Task<Template?> EditTemplate(int id, Template updatedTemplate)
+    public async Task<Template?> EditTemplate(string name, Template updatedTemplate)
     {
-        return await _templateRepository.UpdateTemplate(id, updatedTemplate);
+        return await _templateRepository.UpdateTemplate(name, updatedTemplate);
     }
-    public async Task<bool> DeleteTemplate(int id)
+    public async Task<bool> DeleteTemplate(string name)
     {
-        return await _templateRepository.DeleteTemplate(id);
+        return await _templateRepository.DeleteTemplate(name);
     }
 }

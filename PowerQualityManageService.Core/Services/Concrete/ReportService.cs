@@ -34,13 +34,13 @@ public class ReportService : IReportService
         return await _reportRepository.Get(fileName);
     }
 
-    public async Task<string?> GenerateReport(int templateId, ResultDefinition resultDefinition)
+    public async Task<string?> GenerateReport(string templateName, ResultDefinition resultDefinition)
     {
 #if DEBUG
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 #endif
-        Template? template = await _templateService.GetTemplateById(templateId);
+        Template? template = await _templateService.GetTemplateByName(templateName);
         if (template == null) return null;
 #if DEBUG
         stopwatch.Stop();

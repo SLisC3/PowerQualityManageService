@@ -4,8 +4,9 @@ namespace PowerQualityManageService.Core.Repositories.Abstract;
 
 public interface ITemplateRepository
 {
-    Task<Template> AddTemplate(Template template);
-    Task<bool> DeleteTemplate(int id);
-    Task<Template?> UpdateTemplate(int id, Template template);
-    Task<Template?> GetTemplateById(int id);
+    Task<List<Template>> GetTemplates();
+    Task<Template?> AddTemplate(Template template);
+    Task<bool> DeleteTemplate(string name);
+    Task<Template?> UpdateTemplate(string name, Template template);
+    Task<Template?> GetTemplateByName(string name);
 }
