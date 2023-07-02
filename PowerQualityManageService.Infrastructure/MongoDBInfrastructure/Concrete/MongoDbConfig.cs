@@ -11,4 +11,5 @@ public class MongoDbConfig
     public string? Database { get; set; }
     public string? DataSamples { get; set; }
     public string? Templates { get; set; }
+    public string? Reports { get; set; }
 }

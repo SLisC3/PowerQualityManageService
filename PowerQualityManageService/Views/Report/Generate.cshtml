@@ -1,0 +1,73 @@
+﻿@model AddReportModel
+@{
+
+}
+
+<script src="~/js/alerts.js"></script>
+<script src="~/js/table.js"></script>
+
+@using (Html.BeginForm("Generate", "Report", FormMethod.Post))
+{
+    <div id="overlay"></div>
+
+    <div class="p-4 bg-secondary">
+        <h2>Generuj Raport</h2>
+
+        <div class="row" id="alertsGenerate">
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Nazwa</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Template" class="control-label">Nazwa szablonu</label>
+                        <input asp-for="Template" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateFrom" class="control-label">Data rozpoczęcie</label>
+                        <input asp-for="DateFrom" class="form-control datepicker" id="startDate" type="datetime-local" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateTo" class="control-label">Data rozpoczęcie</label>
+                        <input asp-for="DateTo" class="form-control datepicker" id="endDate" type="datetime-local" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MeasuringPoint" class="control-label">Nazwa punktu pomiarowego</label>
+                        <input asp-for="MeasuringPoint" class="form-control" />
+                    </div>
+                    <div id="hiddenInputs">
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Generuj" class="btn btn-primary bg-gradient-primary btn-lg w-100" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+}
+<script src="~/js/table.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+
+    //const Polish = require("flatpickr/dist/l10n/pl.ts");
+
+    config = {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+        altInput: true,
+        defaultHour: 0
+    }
+    flatpickr("#startDate", config);
+    flatpickr("#endDate", config);
+</script>
+
+

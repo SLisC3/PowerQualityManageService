@@ -19,6 +19,7 @@ builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRep
 builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<ILocalFilesRepository, LocalFilesRepository>();
 
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IDataAcquisitionService, DataAcquisitionService>();

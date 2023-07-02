@@ -15,7 +15,7 @@ public static class MailSender
         mailMessage.SetFrom("powerqualitymanager@gmail.com", "PQM");
         mailMessage.SetSubject(model.Title);
         mailMessage.SetBody(model.Body);
-        model.AddressesTo.ForEach(x => mailMessage.AddTo(x.Mail, x.DisplayName));
+        mailMessage.AddTo(model.Mail, model.DisplayName);
         mailMessage.Attachments.Add(new Attachment(Path.Combine(Directory.GetCurrentDirectory(), "Reports", model.Attachment)));
         return await mailMessage.SendSmtpAsync();
     }
