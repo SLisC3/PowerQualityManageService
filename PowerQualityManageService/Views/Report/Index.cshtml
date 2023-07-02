@@ -1,48 +1,29 @@
 ﻿@using System.Data;
+@using PowerQualityManageService.Model.Models;
 @{
 
 }
 <script src="~/js/alerts.js"></script>
-<script src="~/js/table.js"></script>
-<script src="~/js/loading.js"></script>
+@*<script src="~/js/table.js"></script>*@
+@*<script src="~/js/loading.js"></script>*@
+<script src="~/js/buttons.js"></script>
 <div class="text-center">
-    <h1 class="display-4">Podgląd</h1>
+    <h1 class="display-4">Raporty</h1>
     <div class="container">
+
+        @*Sekcja Alertów*@
+        <div class="row">
+            <div id="alertReports"></div>
+        </div>
+
+        @*Sekcja 1 - Notka po prawej po lewej funkcyjny*@
         <div class="row">
             <div class="col">
                 <div class="row">
                     <div style="margin-bottom: 40px;"></div>
                 </div>
                 <div class="row">
-                    <form method="post" asp-area="" asp-controller="DataAcquisition" asp-action="Upload">
-                        <div class="row">
-                            <div class="col-md-3"> </div>
-                            <div class="col-md-6">
-                                <div id="dropArea" style="border: 2px dashed gray; padding: 8px; text-align: center;">
-                                    Przeciągnij plik tutaj lub kliknij, aby wybrać plik
-                                </div>
-                                <div class="form-group">
-                                    <input type="file" id="fileInput" name="fileInput" style="display: none;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3"> </div>
-
-                            <div class="col-md-6">
-                                <div id="alerts"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3">
-                                <button id="submit" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Odczytaj dane</button>
-                            </div>
-                            <div class="col-md-3">
-                                <button id="closeUploadFormButton" class="btn btn-outline-primary btn-lg w-100" type="button">Anuluj</button>
-                            </div>
-                        </div>
-                    </form>
+                    <button id="generateReport" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="location.href='@Url.Action("Generate", "Report")'">Generuj nowy Raport</button>
                 </div>
             </div>
             <div class="col">
@@ -60,21 +41,201 @@
                 </div>
             </div>
         </div>
+
+        @*Sekcja 2 - Lista Szablonów*@
         <div class="row">
-            <div id="alertsPreview"></div>
+      
+                <div class="card">
+                    <div class="table-responsive" id="tableContainer">
+                        @*<div id="tableContainer">*@
+                        @*</div>*@
+                    </div>
+                </div>
+           
+            @*<label for="reports"> Wygenerowane Raporty: </label>
+            <select id="templates" onchange="templateSelected()" class="form-control" name="templates" placeholder="Wybierz szablon" multiple>
+            @{
+            templates = ViewBag.Templates;
+            foreach (PowerQualityManageService.Model.Models.Template temp in templates)
+            {
+            <option value="@temp.Name">@temp.Name</option>
+            }
+            }
+            </select>*@
         </div>
+
         <div class="row">
             <div style="margin-bottom: 20px;"></div>
         </div>
+
+        @*Sekcja 3 - przyciski*@
         <div class="row">
-            <div class="card">
-                <div id="tablePreview" class="table-responsive">
-                </div>
+
+            <div class="col">
+                <button id="previewButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToPreview()">Podgląd</button>
+            </div>
+
+            <div class="col">
+                <button id="downloadButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToDownload()">Pobierz</button>
+            </div>
+
+            <div class="col">
+                <button id="sendMailButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToSendMail()">Wyślij Mail</button>
+            </div>
+
+            <div class="col">
+                <button id="deleteButton" class="hiddenbtn btn-primary bg-gradient-primary btn-lg w-100" type="button" onclick="redirectToDelete()">Usuń</button>
             </div>
         </div>
+
         <div class="row">
             <div style="margin-bottom: 20px;"></div>
         </div>
+
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        var reports = @Html.Raw(Json.Serialize(ViewBag.Reports));
+        var currentReport = 0;
+
+        window.onload = function () {
+            CreateSelectableTable();
+            console.log("Wstpne ladowanie zakonczone")
+        }
+    </script>
+    <script>
+        function redirectToDownload() {
+            var val = reports[currentReport].fileName;
+            console.log("Report file name", val)
+            var url = '@Url.Action("Download", "Report")' + '?fileName=' + encodeURIComponent(val);
+            location.href = url;
+        }
+        function redirectToPreview() {
+            var val = reports[currentReport].fileName;
+            console.log("Report file name", val)
+            var url = '@Url.Action("Preview", "Report")' + '?fileName=' + encodeURIComponent(val);
+            location.href = url;
+        }
+        function redirectToDelete() {
+            var val = reports[currentReport].fileName;
+            console.log("Report file name", val)
+            var url = '@Url.Action("Delete", "Report")' + '?fileName=' + encodeURIComponent(val);
+            location.href = url;
+        }
+        function redirectToSendMail() {
+            var val = reports[currentReport].fileName;
+            console.log("Report file name", val)
+            var url = '@Url.Action("SendMail", "Report")' + '?fileName=' + encodeURIComponent(val);
+            location.href = url;
+        }
+    </script>
+    <script>
+        function CreateSelectableTable() {
+            var table = document.createElement('table');
+            table.className = "table align-items-center mb-0";
+            // Tworzenie wiersza nagłówka
+            var head = document.createElement("thead");
+
+            var headerRow = document.createElement("tr");
+            var headerCell1 = document.createElement("th");
+            headerCell1.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+            headerCell1.textContent = "Lp";
+            headerRow.appendChild(headerCell1);
+            var headerCell2 = document.createElement("th");
+            headerCell2.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+            headerCell2.textContent = "Nazwa Raportu";
+            headerRow.appendChild(headerCell2);
+            var headerCell3 = document.createElement("th");
+            headerCell3.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+            headerCell3.textContent = "Nazwa szablonu";
+            headerRow.appendChild(headerCell3);
+            var headerCell4 = document.createElement("th");
+            headerCell4.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+            headerCell4.textContent = "Zakres ";
+            headerRow.appendChild(headerCell4);
+            var headerCell5 = document.createElement("th");
+            headerCell5.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2";
+            headerCell5.textContent = "Punkt Pomiarowy";
+            headerRow.appendChild(headerCell5);
+
+            head.appendChild(headerRow);
+            table.appendChild(head);
+            // Tworzenie wierszy z danymi
+            var length = reports.length
+            // Tworzenie wierszy z
+            console.log("Raporty", reports)
+            var body = document.createElement("tbody");
+            for (var i = 0; i < length; i++) {
+                var ValRow = document.createElement("tr");
+                ValRow.className = "selectable-row"
+                var ValCell1 = document.createElement("td");
+                ValCell1.textContent = i + 1;
+                ValCell1.className = "text-dark text-xs";
+                ValRow.appendChild(ValCell1);
+                var ValCell2 = document.createElement("td");
+                ValCell2.textContent = reports[i].name;
+                ValCell2.className = "text-dark text-xs";
+                console.log("Raport Name", reports[i])
+                ValRow.appendChild(ValCell2);
+                var ValCell3 = document.createElement("td");
+                ValCell3.textContent = reports[i].template;
+                ValCell3.className = "text-dark text-xs";
+                ValRow.appendChild(ValCell3);
+                var ValCell4 = document.createElement("td");
+                ValCell4.textContent = reports[i].dateFrom + " - " + reports[i].dateTo;
+                ValCell4.className = "text-dark text-xs";
+                ValRow.appendChild(ValCell4);
+                var ValCell5 = document.createElement("td");
+                ValCell5.textContent = reports[i].measuringPoint;
+                ValCell5.className = "text-dark text-xs";
+                ValRow.appendChild(ValCell5);
+                body.appendChild(ValRow)
+            }
+            table.appendChild(body)
+            // Dodanie tabeli do elementu HTML
+            var tableContainer = document.getElementById("tableContainer");
+            tableContainer.appendChild(table);
+            console.log("Stworzono tabele")
+        }
+    </script>
+    <script>
+        $('.tableContainer').click(function () {
+            console.log("Kliknieto wiersz")
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            console.log("Dokument ready")
+            $('.selectable-row').click(function () {
+                console.log("Kliknieto wiersz")
+                // Usuń klasę zaznaczenia z innych wierszy
+                $('.selectable-row').removeClass('selected');
+                $('.selectable-row').css('background-color', '');;
+
+                // Dodaj klasę zaznaczenia do klikniętego wiersza
+                $(this).addClass('selected');
+                $(this).css('background-color', 'gray');
+
+                // Pobierz dane z zaznaczonego wiersza i wykorzystaj je w funkcji
+                currentReport = $(this).find('td:first').text() - 1;
+                console.log("Current", currentReport)
+                var rowData = $(this).text();
+                myFunction(rowData);
+            });
+            });
+
+
+        function myFunction(data) {
+            // Wykonaj operacje na danych z zaznaczonego wiersza
+            unhideBtn('previewButton')
+            unhideBtn('downloadButton')
+            unhideBtn('sendMailButton')
+            unhideBtn('deleteButton')
+            console.log('Zaznaczono wiersz: ' + data);
+        }
+    </script>
+
+}
 

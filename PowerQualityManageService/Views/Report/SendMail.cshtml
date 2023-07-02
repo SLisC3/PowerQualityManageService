@@ -1,0 +1,48 @@
+﻿@model PowerQualityManageService.Model.Models.MailModel
+
+<script src="~/js/alerts.js"></script>
+<script src="~/js/table.js"></script>
+
+@using (Html.BeginForm("SendMail", "Report", FormMethod.Post))
+{
+    <div id="overlay"></div>
+
+    <div class="p-4 bg-secondary">
+        <h2>Wyślij E-mail z raportem</h2>
+
+        <div class="row" id="alertsSendMail">
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Mail" class="control-label">Adresat</label>
+                        <input asp-for="Mail" class="form-control" />
+                    </div>
+@*                    <div class="form-group">
+                        <label asp-for="DisplayName" class="control-label">Imi</label>
+                        <input asp-for="DisplayName" class="form-control" />
+                    </div>*@
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label">Tytuł wiadomości</label>
+                        <input asp-for="Title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Body" class="control-label">Zawartość wiadomości</label>
+                        <input asp-for="Body" class="form-control" />
+                    </div>
+                    <div id="hiddenInputs">
+                        <input asp-for="Attachment" class="form-control" type = "hidden" value="@ViewBag.FileName"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Wyślij" class="btn btn-primary bg-gradient-primary btn-lg w-100" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+}

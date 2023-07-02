@@ -15,26 +15,30 @@ public class ReportService : IReportService
 {
     private readonly ITemplateService _templateService;
     private readonly IDataService _dataService;
+    private readonly ILocalFilesRepository _filesRepository;
     private readonly IReportRepository _reportRepository;
 
-    public ReportService(ITemplateService templateService, IDataService dataService, IReportRepository reportRepository)
+    public ReportService(ITemplateService templateService, IDataService dataService, IReportRepository reportRepository, ILocalFilesRepository filesRepository)
     {
         _templateService = templateService;
         _dataService = dataService;
         _reportRepository = reportRepository;
+        _filesRepository = filesRepository;
     }
 
-    public bool Delete(string fileName)
+    public async Task<bool> Delete(string fileName)
     {
-        return _reportRepository.Delete(fileName);
+        await _reportRepository.Delete(fileName);
+        string filepath = fileName.ToFilePath();
+        return _filesRepository.DeleteFile(filepath);
     }
 
     public async Task<byte[]> Download(string fileName)
     {
-        return await _reportRepository.Get(fileName);
+        return await _filesRepository.GetFile(fileName);
     }
 
-    public async Task<string?> GenerateReport(string templateName, ResultDefinition resultDefinition)
+    public async Task<string?> GenerateReport(string templateName, ResultDefinition resultDefinition, string reportName)
     {
 #if DEBUG
         Stopwatch stopwatch = new Stopwatch();
@@ -79,6 +83,16 @@ public class ReportService : IReportService
         string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", fileName);
         ReportDocument document = new ReportDocument(reportModel);
         document.GeneratePdf(filePath);
+        await _reportRepository.Add(new Report() 
+            { 
+                FileName = fileName.ToBaseFileName(),
+                Name = reportName,
+                DateFrom= resultDefinition.DateFrom,
+                DateTo= resultDefinition.DateTo,
+                MeasuringPoint= resultDefinition.MeasuringPoint,
+                Template = templateName
+            }
+        );;
 #if DEBUG
         stopwatch.Stop();
         Console.WriteLine("Czas Generowania PDF: " + stopwatch.Elapsed);
@@ -86,14 +100,25 @@ public class ReportService : IReportService
         return fileName;
     }
 
-    public void PreviewReport(string fileName)
+    public Task<string> GetFileNameFromReportName(string name)
     {
-        _reportRepository.Preview(fileName);
+        throw new NotImplementedException();
     }
 
-    public async Task<bool> SendMail(string fileName, MailModel model)
+    public async Task<List<Report>?> GetReports()
     {
-        model.Attachment = fileName;
+        return await _reportRepository.GetAll();
+    }
+
+    public Task PreviewReport(string fileName)
+    {
+        _filesRepository.PreviewFile(fileName);
+        return null;
+    }
+
+    public async Task<bool> SendMail(MailModel model)
+    {
+        model.Attachment = model.Attachment.ToFilePath();
         return await MailSender.SendMail(model);
     }
 

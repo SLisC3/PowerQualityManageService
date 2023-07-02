@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Model.Models;
+using PowerQualityManageService.Models;
 using SharpCompress.Common;
 using System.Diagnostics;
 
@@ -16,53 +18,82 @@ public class ReportController : Controller
         _reportService = reportService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewBag.CurrentArea = "Raporty";
+        ViewBag.Reports = await _reportService.GetReports();
         return View();
     }
 
+    [HttpGet]
+    [Route("Generate")]
+    public async Task<ActionResult> Generate()
+    {
+        return View();
+    }
 
     [HttpPost]
     [Route("Generate")]
-    public async Task<ActionResult<string>> Generate(string templateName, ResultDefinition resultDefinition)
+    public async Task<ActionResult<string>> Generate([FromForm]AddReportModel model)
     {
 
+        string templateName = model.Template;
+        ResultDefinition resultDefinition = new ResultDefinition()
+        {
+            DateFrom = model.DateFrom,
+            DateTo = model.DateTo, 
+            MeasuringPoint = model.MeasuringPoint            
+        };
+        string reportName = model.Name;
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        string? fileName = await _reportService.GenerateReport(templateName, resultDefinition);
+        await _reportService.GenerateReport(templateName, resultDefinition,reportName);
         
         stopwatch.Stop();
         TimeSpan czasWykonania = stopwatch.Elapsed;
         Console.WriteLine("Czas wykonania akcji w controllerze: " + czasWykonania);
+
         
-        return fileName != null ? Ok(fileName) : BadRequest() ;
+        ViewBag.Reports = await _reportService.GetReports();
+        return View("Index");
     }
 
     [HttpGet]
     [Route("Preview")]
     public async Task<ActionResult> Preview(string fileName)
     {
-        _reportService.PreviewReport(fileName);
-        return Ok();
+        string filepath = fileName.ToFilePath();
+        await _reportService.PreviewReport(filepath);
+        ViewBag.Reports = await _reportService.GetReports();
+        return View("Index");
+    }
+
+    [HttpGet]
+    [Route("SendMail")]
+    public ActionResult SendMail(string fileName)
+    {
+        ViewBag.FileName = fileName;
+        return View();
     }
 
     [HttpPost]
     [Route("SendMail")]
-    public async Task<ActionResult> SendMail(string fileName, MailModel model)
+    public async Task<ActionResult> SendMail([FromForm]MailModel model)
     {
-        bool result = await _reportService.SendMail(fileName,model);
-        return result == true ? Ok() : BadRequest();
+        bool result = await _reportService.SendMail(model);
+        ViewBag.Reports = await _reportService.GetReports();// MockModels();
+        return View("Index");
     }
 
     [HttpGet]
     [Route("Download")]
     public async Task<ActionResult> Download(string fileName)
     {
-        byte[] file = await _reportService.Download(fileName);
+        string filepath = fileName.ToFilePath();
+        byte[] file = await _reportService.Download(filepath);
         Response.Headers.Clear();
-        Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{fileName}\"");
+        Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{filepath}\"");
         return File(file, "application/octet-stream");
     }
 
@@ -70,7 +101,16 @@ public class ReportController : Controller
     [Route("Delete")]
     public async Task<ActionResult> Delete(string fileName)
     {
-        bool result = _reportService.Delete(fileName);
-        return result == true ? Ok() : NotFound();
+        bool result = await _reportService.Delete(fileName);
+        if (result == false) return View("Error");
+        ViewBag.Reports = await _reportService.GetReports();
+        return View("Index");
+    }
+
+    private List<ReportDTOModel> MockModels()
+    {
+        return new List<ReportDTOModel>() {
+            new ReportDTOModel() { Name = "a", Template = "b", DateRange = "c", MeasuringPoint = "d" },
+            new ReportDTOModel() { Name = "a2", Template = "b2", DateRange = "c2", MeasuringPoint = "d2" }};
     }
 }

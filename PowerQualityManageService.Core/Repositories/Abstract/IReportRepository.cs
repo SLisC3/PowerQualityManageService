@@ -1,8 +1,12 @@
-﻿namespace PowerQualityManageService.Core.Repositories.Abstract;
+﻿using PowerQualityManageService.Model.Models;
+
+namespace PowerQualityManageService.Core.Repositories.Abstract;
 
 public interface IReportRepository
 {
-    public bool Delete(string fileName);
-    public Task<byte[]> Get(string fileName);
-    public void Preview(string fileName);
+    Task Add(Report model);
+    Task Delete(string fileName);
+    Task<List<Report>?> GetAll();
+    Task<Report?> GetByName(string fileName);
+    Task<string> GetFileNameFromName(string name);
 }
