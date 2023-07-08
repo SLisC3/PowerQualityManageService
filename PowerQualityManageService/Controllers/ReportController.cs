@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.Services.Abstract;
 using PowerQualityManageService.Model.Models;
@@ -29,6 +30,10 @@ public class ReportController : Controller
     [Route("Generate")]
     public async Task<ActionResult> Generate()
     {
+        ViewBag.Templates = await _reportService.GetTemplatesNames();
+        var points = await _reportService.GetMeasuringPoints();
+        var res = points.Select(x=> new SelectListItem { Text = x, Value = x }).ToList();
+        ViewBag.MeasuringPoints = res;
         return View();
     }
 
@@ -42,7 +47,7 @@ public class ReportController : Controller
         {
             DateFrom = model.DateFrom,
             DateTo = model.DateTo, 
-            MeasuringPoint = model.MeasuringPoint            
+            MeasuringPoint = model.MeasuringPoint           
         };
         string reportName = model.Name;
         Stopwatch stopwatch = new Stopwatch();

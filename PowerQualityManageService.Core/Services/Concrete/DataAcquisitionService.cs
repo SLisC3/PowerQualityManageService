@@ -70,4 +70,9 @@ public class DataAcquisitionService : IDataAcquisitionService
 
 
     }
+
+    public async Task<List<string>> GetMeasuringPoints()
+    {
+        return await _dbRepository.GetMeasuringPoints();
+    }
 }

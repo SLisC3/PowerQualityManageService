@@ -35,4 +35,9 @@ public class TemplateService : ITemplateService
     {
         return await _templateRepository.DeleteTemplate(name);
     }
+
+    public async Task<List<string>> GetTemplatesNames()
+    {
+        return await _templateRepository.GetTemplatesNames();
+    }
 }

@@ -106,7 +106,7 @@
                 var url = form.attr('action');
                 var formData = new FormData(form[0]);
                 formData.append('fileName', @fileName);
-                formData.append('measuringPoint', $('#measuringPointControlInput').val());
+                formData.append('measuringPoint', $('#points1').val() || $('#points2').val());
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -185,4 +185,17 @@
             });
         });
     </script>
+    <script>
+    function toggleField(hideObj, showObj) {
+        console.log(showObj)
+        hideObj.disabled = true;
+        hideObj.style.display = 'none';
+      
+        show = document.getElementById(showObj)
+        show.disabled = false;
+        show.style.display = 'inline';
+        show.focus();
+    }
+</script>
+
 }

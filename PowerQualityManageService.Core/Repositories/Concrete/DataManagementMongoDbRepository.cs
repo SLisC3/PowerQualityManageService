@@ -3,6 +3,7 @@ using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Model.Models;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 public class DataManagementMongoDbRepository : IDataManagementDbRepository
@@ -79,5 +80,10 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         }
 
         return dt;
+    }
+
+    public async Task<List<string>> GetMeasuringPoints()
+    {
+        return _dataSamples.AsQueryable().Select(x=>x.MeasuringPoint).Distinct().ToList();
     }
 }

@@ -110,6 +110,16 @@ public class ReportService : IReportService
         return await _reportRepository.GetAll();
     }
 
+    public async Task<List<string>> GetTemplatesNames()
+    {
+        return await _templateService.GetTemplatesNames();
+    }
+
+    public async Task<List<string>> GetMeasuringPoints()
+    {
+        return await _dataService.GetMeasuringPoints();
+    }
+
     public Task PreviewReport(string fileName)
     {
         _filesRepository.PreviewFile(fileName);

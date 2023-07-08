@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using PowerQualityManageService.Core.Services.Abstract;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PowerQualityManageService.Controllers;
 
@@ -16,9 +16,12 @@ public class DataAcquisitionController : Controller
     }
 
     [HttpGet]
-    public ActionResult Index()
+    public async Task<ActionResult> Index()
     {
         ViewBag.CurrentArea = "Import danych";
+        var points = await _dataManagementService.GetMeasuringPoints();
+        var res = points.Select(x => new SelectListItem { Text = x, Value = x }).ToList();
+        ViewBag.MeasuringPoints = res;
         return View();
     }
 

@@ -9,4 +9,5 @@ public interface ITemplateRepository
     Task<bool> DeleteTemplate(string name);
     Task<Template?> UpdateTemplate(string name, Template template);
     Task<Template?> GetTemplateByName(string name);
+    Task<List<string>> GetTemplatesNames();
 }

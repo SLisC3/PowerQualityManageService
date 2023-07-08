@@ -49,4 +49,9 @@ public class TemplateRepository : ITemplateRepository
     {
         return await _templates.Find(x => true).ToListAsync();
     }
+
+    public async Task<List<string>> GetTemplatesNames()
+    {
+        return _templates.Find(x=>true).ToEnumerable().Select(x=>x.Name).ToList();
+    }
 }

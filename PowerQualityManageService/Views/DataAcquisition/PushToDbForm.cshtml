@@ -14,7 +14,14 @@
                 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <input type="text" class="form-control form-control-alternative" id="measuringPointControlInput" name="measuringPoint" placeholder="Nazwa punktu pomiarowego">
+                        <select id="points1"
+                                   onchange="if(this.options[this.selectedIndex].value=='customOption'){toggleField(this,'points2');this.selectedIndex='0';}" 
+                                   asp-items="@ViewBag.MeasuringPoints" class="form-control">
+                                  <option value = null>Wprowadź punkt pomiarowy</option>
+                                  <option value="customOption">[Wprowadź nowy punkt pomiarowy]</option>
+                        </select>
+                        <input id="points2" class="form-control" style="display:none;" onblur="if(this.value==''){toggleField(this,'points1');}" placeholder="Punkt pomiarowy">
+                        @*<input type="text" class="form-control form-control-alternative" id="measuringPointControlInput" name="measuringPoint" placeholder="Nazwa punktu pomiarowego">*@
                     </div>
                 </div>
             </div>

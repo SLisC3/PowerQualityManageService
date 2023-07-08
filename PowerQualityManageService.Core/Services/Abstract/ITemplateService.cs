@@ -5,6 +5,7 @@ namespace PowerQualityManageService.Core.Services.Abstract;
 public interface ITemplateService
 {
     Task<List<Template>> GetTemplates();
+    Task<List<string>> GetTemplatesNames();
     Task<Template?> AddTemplate(Template template);
     Task<bool> DeleteTemplate(string name);
     Task<Template?> EditTemplate(string name, Template template);

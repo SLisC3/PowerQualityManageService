@@ -18,7 +18,14 @@
                     <form method="get" asp-area="" asp-controller="Preview" asp-action="Data">
                         <div class="row">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="measuringPointPreview" name="measuringPoint" placeholder="Punkt pomiarowy">
+                                <select id="points1"
+                                   onchange="if(this.options[this.selectedIndex].value=='customOption'){toggleField(this,'points2');this.selectedIndex='0';}" 
+                                   asp-items="@ViewBag.MeasuringPoints" class="form-control">
+                                  <option value = null>Wprowadź punkt pomiarowy</option>
+                                  <option value="customOption">[Wprowadź nowy punkt pomiarowy]</option>
+                                </select>
+                                <input id="points2" class="form-control" style="display:none;" onblur="if(this.value==''){toggleField(this,'points1');}" placeholder="Punkt pomiarowy">
+                    @*            <input type="text" class="form-control" id="measuringPointPreview" name="measuringPoint" placeholder="Punkt pomiarowy">*@
                             </div>
                         </div>
                         <div class="row">
@@ -95,7 +102,8 @@
                 var form = $(this).closest('form');
                 var url = form.attr('action');
                 var formData = {
-                    measuringPoint: $('#measuringPointPreview').val(),
+                    measuringPoint1: $('#points1').val(),
+                    measuringPoint2: $('#points2').val(),
                     startDate: $('#startDatePreview').val(),
                     endDate: $('#endDatePreview').val(),
                 };
@@ -106,7 +114,7 @@
                     url: url,
                     type: 'GET',
                     data: {
-                        measuringPoint: $('#measuringPointPreview').val(),
+                        measuringPoint: $('#points1').val() || $('#points2').val(),
                         startDate: $('#startDatePreview').val(),
                         endDate: $('#endDatePreview').val()
                     }
@@ -126,5 +134,18 @@
             });
         });
     </script>
+    <script>
+        function toggleField(hideObj, showObj) {
+            console.log(showObj)
+            hideObj.disabled = true;
+            hideObj.style.display = 'none';
+
+            show = document.getElementById(showObj)
+            show.disabled = false;
+            show.style.display = 'inline';
+            show.focus();
+        }
+    </script>
+
 }
 

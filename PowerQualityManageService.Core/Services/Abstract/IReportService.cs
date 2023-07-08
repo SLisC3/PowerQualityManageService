@@ -10,4 +10,6 @@ public interface IReportService
     Task<bool> Delete(string fileName);
     Task<string> GetFileNameFromReportName(string name);
     Task<List<Report>?> GetReports();
+    Task<List<string>> GetTemplatesNames();
+    Task<List<string>> GetMeasuringPoints();
 }

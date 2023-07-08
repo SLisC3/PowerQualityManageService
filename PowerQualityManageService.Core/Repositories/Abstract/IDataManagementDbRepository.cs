@@ -7,5 +7,6 @@ public interface IDataManagementDbRepository
     Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate, string measuringPoint);
     Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate, string measuringPoint);
     Task<int> InsertDataFromDataTable(DataTable dt, string measuringPoint);
+    Task<List<string>> GetMeasuringPoints();
 }
 

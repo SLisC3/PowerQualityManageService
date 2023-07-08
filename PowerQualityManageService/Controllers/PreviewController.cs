@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Services.Abstract;
+using PowerQualityManageService.Core.Services.Concrete;
 using System.Data;
 
 namespace PowerQualityManageService.Controllers;
@@ -18,9 +20,12 @@ public class PreviewController : Controller
         _rep = rep;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewBag.CurrentArea = "Podgląd";
+        var points = await _rep.GetMeasuringPoints();
+        var res = points.Select(x => new SelectListItem { Text = x, Value = x }).ToList();
+        ViewBag.MeasuringPoints = res;
         return View();
     }
 

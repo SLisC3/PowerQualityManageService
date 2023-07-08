@@ -14,9 +14,9 @@ public partial class DataService : IDataService
         _dataManagementRepository = dataManagementRepository;
     }
 
-    public Task<List<string>> GetMeasuringPoints()
+    public async Task<List<string>> GetMeasuringPoints()
     {
-        throw new NotImplementedException();
+        return await _dataManagementRepository.GetMeasuringPoints();
     }
 
     public async Task<GetSamplesModel> GetSamples(DateTime startDate, DateTime endDate, string measuringPoint, List<string> keys)
