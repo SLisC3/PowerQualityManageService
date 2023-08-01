@@ -6317,7 +6317,7 @@ input[type='button'].btn-block
 {
     min-height: 1px;
     padding: 1.5rem; 
-
+    text-align:left;
     flex: 1 1 auto;
 }
 

@@ -30,10 +30,17 @@ public class ReportController : Controller
     [Route("Generate")]
     public async Task<ActionResult> Generate()
     {
-        ViewBag.Templates = await _reportService.GetTemplatesNames();
+        var tmpls = await _reportService.GetTemplatesNames();
+        var resTmpls = tmpls.Select(x => new SelectListItem { Text = x, Value = x }).ToList();
+        ViewBag.Templates = resTmpls;
+
         var points = await _reportService.GetMeasuringPoints();
-        var res = points.Select(x=> new SelectListItem { Text = x, Value = x }).ToList();
-        ViewBag.MeasuringPoints = res;
+        var resPoints = points.Select(x=> new SelectListItem { Text = x, Value = x }).ToList();
+        ViewBag.MeasuringPoints = resPoints;
+
+        var startEndDate = await _reportService.GetStartEndDate();
+        ViewBag.StartDate = startEndDate.Item1;
+        ViewBag.EndDate = startEndDate.Item2;
         return View();
     }
 
@@ -69,7 +76,7 @@ public class ReportController : Controller
     public async Task<ActionResult> Preview(string fileName)
     {
         string filepath = fileName.ToFilePath();
-        await _reportService.PreviewReport(filepath);
+        _reportService.PreviewReport(filepath);
         ViewBag.Reports = await _reportService.GetReports();
         return View("Index");
     }

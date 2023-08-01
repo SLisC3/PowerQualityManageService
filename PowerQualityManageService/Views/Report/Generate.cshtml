@@ -26,7 +26,12 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Template" class="control-label">Nazwa szablonu</label>
-                        <input asp-for="Template" class="form-control" />
+      @*                  <input asp-for="Template" class="form-control" />*@
+                        <select id="templates1"
+                            onchange="if(this.options[this.selectedIndex].value=='customOption'){toggleField(this,'templates2');this.selectedIndex='0';}" 
+                            asp-for="Template" asp-items="@ViewBag.Templates" class="form-control">
+                            <option></option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label asp-for="DateFrom" class="control-label">Data rozpoczęcie</label>
@@ -66,13 +71,20 @@
     //const Polish = require("flatpickr/dist/l10n/pl.ts");
     //var measuringPoints = @Html.Raw(Json.Serialize(ViewBag.MeasuringPoints));
     var templates = @Html.Raw(Json.Serialize(ViewBag.Templates));
+    var startDate = @Html.Raw(Json.Serialize(ViewBag.StartDate));
+    var endDate = @Html.Raw(Json.Serialize(ViewBag.EndDate));
+
+    console.log(startDate)
+    console.log(endDate)
 
     config = {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true,
         altInput: true,
-        defaultHour: 0
+        defaultHour: 0,
+        minDate: startDate,
+        maxDate: endDate
     }
     flatpickr("#startDate", config);
     flatpickr("#endDate", config);

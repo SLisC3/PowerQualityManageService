@@ -86,4 +86,11 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
     {
         return _dataSamples.AsQueryable().Select(x=>x.MeasuringPoint).Distinct().ToList();
     }
+
+    public async Task<(DateTime, DateTime)> GetStartEndDate()
+    {
+        var min = _dataSamples.AsQueryable().Select(x => x.Date).Min();
+        var max = _dataSamples.AsQueryable().Select(x => x.Date).Max();
+        return (min, max);
+    }
 }

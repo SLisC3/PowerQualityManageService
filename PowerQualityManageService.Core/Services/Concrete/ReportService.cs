@@ -8,6 +8,7 @@ using PowerQualityManageService.Core.Utils.Extensions;
 using PowerQualityManageService.Model.Models;
 using QuestPDF.Fluent;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace PowerQualityManageService.Core.Services.Concrete;
 
@@ -53,7 +54,7 @@ public class ReportService : IReportService
         stopwatch.Restart();
         stopwatch.Start();
 #endif
-        List<string> keys = NormResultReportHelper.GetKeys(template.Charts.SelectMany(x => x.SamplesName));
+        List<string> keys = NormResultReportHelper.GetKeys(template.Charts!.SelectMany(x => x.SamplesName));
         GetSamplesModel samplesWithDatalabels = await _dataService.GetSamples(resultDefinition.DateFrom, resultDefinition.DateTo, resultDefinition.MeasuringPoint, keys);
 #if DEBUG
         stopwatch.Stop();
@@ -120,15 +121,14 @@ public class ReportService : IReportService
         return await _dataService.GetMeasuringPoints();
     }
 
-    public Task PreviewReport(string fileName)
+    public void PreviewReport(string fileName)
     {
         _filesRepository.PreviewFile(fileName);
-        return null;
     }
 
     public async Task<bool> SendMail(MailModel model)
     {
-        model.Attachment = model.Attachment.ToFilePath();
+        model.Attachment = model.Attachment!.ToFilePath();
         return await MailSender.SendMail(model);
     }
 
@@ -149,9 +149,50 @@ public class ReportService : IReportService
         foreach (SingleNormDefinition norm in norms)
         {
             norm.Samples =norm.SamplesName.ToDictionary(l => l, l => samplesWithDatalabels.Samples[l].Cast<decimal>());
-            var result = NormResultCalculator.Calculate(norm);
-            results.Add(new SingleNormResult() { Name = norm.Name, Success = result.Item1, Message = result.Item2 });
+            var result = NormResultCalculator.Calculate(norm).ToList();
+            
+            if (norm.Name.Equals("4b"))
+            {
+                var it = 1;
+                bool s1 = true; var s2 = true; var s3 = true;
+                for (int i = 0; i < result.Count(); i++)
+                {
+                    if(i % 3 == 0 && s1)
+                    {
+                        s1 = s1 && result[i].Result;
+                        if(!s1) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 1", Success = false, Message = $"Norma niespełniona dla {(int) it/3 + 1}" });
+                    }
+                    if (i % 3 == 1 && s2)
+                    {
+                        s2 = s2 && result[i].Result;
+                        if (!s2) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 2", Success = false, Message = $"Norma niespełniona dla {(int)it / 3 + 1}" });
+                    }
+                    if (i % 3 == 2 && s3)
+                    {
+                        s3 = s3 && result[i].Result;
+                        if (!s3) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 3", Success = false, Message = $"Norma niespełniona dla {(int)it / 3 + 1}" });
+                    }
+                    it++;
+                }
+                if (s1) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 1", Success = true });
+                if (s2) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 2", Success = true });
+                if (s3) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 3", Success = true });
+            }
+            else
+            {
+                var it = 1;
+                foreach (var res in result)
+                {
+                    results.Add(new SingleNormResult() { Name = norm.Name + $" Faza {it}", Success = res.Result, Message = res.ErrorMessage});
+                    it++;
+                }
+            }
         }
         return results;
+    }
+
+    public async Task<(DateTime, DateTime)> GetStartEndDate()
+    {
+        return await _dataService.GetStartEndDate();
     }
 }

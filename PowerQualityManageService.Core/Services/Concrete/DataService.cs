@@ -36,4 +36,9 @@ public partial class DataService : IDataService
     {
         return await _dataManagementRepository.GetDataSamplesDT(startDate,endDate,measuringPoint);
     }
+
+    public async Task<(DateTime, DateTime)> GetStartEndDate()
+    {
+        return await _dataManagementRepository.GetStartEndDate();
+    }
 }

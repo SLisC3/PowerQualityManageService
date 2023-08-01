@@ -21,8 +21,6 @@
                                 <select id="points1"
                                    onchange="if(this.options[this.selectedIndex].value=='customOption'){toggleField(this,'points2');this.selectedIndex='0';}" 
                                    asp-items="@ViewBag.MeasuringPoints" class="form-control">
-                                  <option value = null>Wprowadź punkt pomiarowy</option>
-                                  <option value="customOption">[Wprowadź nowy punkt pomiarowy]</option>
                                 </select>
                                 <input id="points2" class="form-control" style="display:none;" onblur="if(this.value==''){toggleField(this,'points1');}" placeholder="Punkt pomiarowy">
                     @*            <input type="text" class="form-control" id="measuringPointPreview" name="measuringPoint" placeholder="Punkt pomiarowy">*@
@@ -52,9 +50,10 @@
                         <a class="card-title h5 d-block text-darker">
                             Wskazówki
                         </a>
-                        <p class="card-description mb-4">
-                            Tutaj krótka instrukcja co i jak
-                        </p>
+                        Aby podejrzeć dane należy: <br />
+                        1. Wybrać punkt pomiarowy, po kliknięciu pojawia się lista dostępnych<br />
+                        2. Wybrać date początku i końca danych
+                        3. Wybrać opcję wyszukaj
                     </div>
                 </div>
             </div>
@@ -81,14 +80,22 @@
     <script>
 
         //const Polish = require("flatpickr/dist/l10n/pl.ts");
+        var startDate = @Html.Raw(Json.Serialize(ViewBag.StartDate));
+        var endDate = @Html.Raw(Json.Serialize(ViewBag.EndDate));
+
+        console.log(startDate)
+        console.log(endDate)
 
         config = {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
             time_24hr: true,
             altInput: true,
-            defaultHour: 0
+            defaultHour: 0,
+            minDate: startDate,
+            maxDate: endDate
         }
+
         flatpickr("#startDatePreview", config);
         flatpickr("#endDatePreview", config);
     </script>

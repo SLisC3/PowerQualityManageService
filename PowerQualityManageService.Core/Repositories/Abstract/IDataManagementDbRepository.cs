@@ -8,5 +8,6 @@ public interface IDataManagementDbRepository
     Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate, string measuringPoint);
     Task<int> InsertDataFromDataTable(DataTable dt, string measuringPoint);
     Task<List<string>> GetMeasuringPoints();
+    Task<(DateTime, DateTime)> GetStartEndDate();
 }
 
