@@ -8,6 +8,7 @@ public static class NormResultReportHelper
         new SingleNormDefinition("1", "Frequency", new NotSufficientSamples()),
         new SingleNormDefinition("2", new List<string>(){"Voltage_Phase1","Voltage_Phase2","Voltage_Phase3" }, new InRangePercentageComparison(230, 10, 95)),
         new SingleNormDefinition("3", new List<string>(){ "LongTermPercebility_PhaseToPhase12", "LongTermPercebility_PhaseToPhase23", "LongTermPercebility_PhaseToPhase31" }, new SimpleComparison(1, NormCalculationMethod.LesserThan,95)),
+        new SingleNormDefinition("4a", new List<string>(){ "UnbalancedVoltage" }, new SimpleComparison(2, NormCalculationMethod.LesserThan,95)),
         new SingleNormDefinition("4b",new List<string>(){
             "HarmonicVoltage2_Phase1","HarmonicVoltage2_Phase2","HarmonicVoltage2_Phase3",
             "HarmonicVoltage3_Phase1","HarmonicVoltage3_Phase2","HarmonicVoltage3_Phase3",

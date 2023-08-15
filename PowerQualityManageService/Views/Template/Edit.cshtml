@@ -72,7 +72,55 @@
         CreateTableCharts();
     }
 </script>
+<script>
+    const overlay = document.getElementById('overlay');
+    const createNameForm = document.getElementById('CreateNameForm');
 
+    const acceptCreateNameButton = document.getElementById('acceptCreateName');
+    const closeCreateNameButton = document.getElementById('closeCreateName');
+
+    const val1 = document.getElementById('val1');
+    const val2 = document.getElementById('val2');
+    const val3 = document.getElementById('val3');
+
+    function openDropdowns() {
+
+        overlay.style.display = 'block';
+        createNameForm.style.display = 'block';
+    }
+
+    function updateConcatenatedValue(id) {
+        const concatenatedValuesInput = document.getElementById(id);
+        var combinedValue = '';
+        if (val1 !== null && val1.value !== undefined && val1.value !== '') {
+            combinedValue += val1.value;
+        }
+        if (val2 !== null && val2 !== undefined && val2.value !== '') {
+            combinedValue += '_';
+            combinedValue += val2.value;
+        }
+        if (val3 !== null && val3 !== undefined && val3.value !== '') {
+            combinedValue += '_';
+            combinedValue += val3.value;
+        }
+        console.log("UpdateValue")
+        console.log(val1.value)
+        console.log(val2.value)
+        console.log(val3.value)
+        concatenatedValuesInput.value = combinedValue;
+    }
+
+    acceptCreateNameButton.addEventListener('click', function () {
+        updateConcatenatedValue('inputValue')
+        overlay.style.display = 'none';
+        createNameForm.style.display = 'none';
+    });
+
+    closeCreateNameButton.addEventListener('click', function () {
+        overlay.style.display = 'none';
+        createNameForm.style.display = 'none';
+    });
+</script>
 <script>
     window.onload = function () {
         CreateTableCharts();
