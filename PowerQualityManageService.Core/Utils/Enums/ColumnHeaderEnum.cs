@@ -10,7 +10,7 @@ public enum Kind : byte
 {
     Unrecognized = 0,
     Date = 1,
-    Time = 2,
+    Time = 2, 
     Flagging =  3,
     Frequency = 4,
     CosPhi = 5,

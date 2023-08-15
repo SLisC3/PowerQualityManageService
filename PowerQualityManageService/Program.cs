@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using PowerQualityManageService.Core.PDFGenerator;
 using PowerQualityManageService.Core.PDFGenerator.PageModels;
 using PowerQualityManageService.Core.Repositories.Abstract;
@@ -14,8 +15,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
 // Add services/repos.
 builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
+//builder.Services.AddScoped<IDataManagementDbRepository, DataManagementSQLRepository>();
 builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();

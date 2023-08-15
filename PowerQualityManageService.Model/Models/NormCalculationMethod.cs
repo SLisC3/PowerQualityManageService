@@ -25,27 +25,50 @@ public class CalculationResult
 
 public abstract class INormCalculationMethod
 {
-    public abstract CalculationResult Calculate(IEnumerable<decimal> samples, string? key = null);
+    public abstract CalculationResult Calculate(IEnumerable<decimal?> samples, string? key = null);
     public CalculationResult Compare(IEnumerable<decimal> samples, decimal compareValue, NormCalculationMethod method, decimal percentageOfTotalPeriod = 100)
     {
         switch (method)
         {
             case NormCalculationMethod.GreaterThan:
-                decimal percentageGreatherThan = samples.Where(x => x >= compareValue).Count() / samples.Count() * 100;
+                decimal correctCount1 = (decimal)samples.Where(x => x >= compareValue).Count();
+                decimal allCount1 = (decimal)samples.Count();
+                decimal percentageGreatherThan = correctCount1 / allCount1 * 100;
                 if (percentageGreatherThan >= percentageOfTotalPeriod) return CalculationResult.Passed(percentageGreatherThan);
-                else return CalculationResult.Failed("Zbyt dużo próbek mniejszych od wartości normy", percentageGreatherThan);
+                else return CalculationResult.Failed("Zbyt dużo próbek poniżej wartości normy", percentageGreatherThan);
             case NormCalculationMethod.LesserThan:
-                decimal percentageLesserThan = samples.Where(x => x <= compareValue).Count() / samples.Count() * 100;
+                decimal correctCount2 = (decimal)samples.Where(x => x <= compareValue).Count();
+                decimal allCount2 = (decimal)samples.Count();
+                decimal percentageLesserThan = correctCount2 / allCount2 * 100;
                 if (percentageLesserThan >= percentageOfTotalPeriod) return CalculationResult.Passed(percentageLesserThan);
-                else return CalculationResult.Failed("Zbyt dużo próbek większych od wartości normy", percentageLesserThan);
+                else return CalculationResult.Failed("Zbyt dużo próbek powyżej wartości normy", percentageLesserThan);
             default:
                 return CalculationResult.Failed("Błędna metoda", null);
         }
     }
+
+    public bool TryFilterSamples(IEnumerable<decimal?> notFilteredSamples, out IEnumerable<decimal> samples)
+    {
+        int corruptedData = notFilteredSamples.Where(x => x == null).Count();
+        
+        if(corruptedData > 10) { samples = new List<decimal>(); return false; }
+
+        try
+        {
+            samples = notFilteredSamples.Where(x => x != null).Select(x => (decimal)x!);
+            return true;
+        }
+        catch (Exception)
+        {
+            samples = new List<decimal>();
+            return false;
+        }
+        
+    }
 }
 public class NotSufficientSamples : INormCalculationMethod
 {
-    public override CalculationResult Calculate(IEnumerable<decimal> samples, string? key = null)
+    public override CalculationResult Calculate(IEnumerable<decimal?> samples, string? key = null)
     {
         return CalculationResult.Failed("Brak wymaganych danych", null);
     }
@@ -53,8 +76,10 @@ public class NotSufficientSamples : INormCalculationMethod
 
 public class Harmonic : INormCalculationMethod
 {
-    public override CalculationResult Calculate(IEnumerable<decimal> samples, string? key = null)
+    public override CalculationResult Calculate(IEnumerable<decimal?> samplesNotFiltered, string? key = null)
     {
+        IEnumerable<decimal> samples;
+        if(!TryFilterSamples(samplesNotFiltered, out samples)) return CalculationResult.Failed("Niewystarczająca ilość danych", null);
         if(string.IsNullOrEmpty(key)) return CalculationResult.Failed("Nieoczekiwany Błąd", null);
         string harmonic = key.Split('_').First();
         switch (harmonic)
@@ -121,8 +146,10 @@ public class InRangePercentageComparison : INormCalculationMethod
         _rangeUnder = range;
         _percentageOfTotalPeriod = percentageOfTotalPeriod;
     }
-    public override CalculationResult Calculate(IEnumerable<decimal> samples, string? key = null)
+    public override CalculationResult Calculate(IEnumerable<decimal?> samplesNotFiltered, string? key = null)
     {
+        IEnumerable<decimal> samples;
+        if (!TryFilterSamples(samplesNotFiltered, out samples)) return CalculationResult.Failed("Niewystarczająca ilość danych", null);
         CalculationResult firstResult = Compare(samples, _normValue - _normValue*_rangeUnder/100, NormCalculationMethod.GreaterThan, _percentageOfTotalPeriod);
         if (firstResult.Result == false) { return firstResult; }
         CalculationResult secondResult = Compare(samples, _normValue + _normValue*_rangeOver/100, NormCalculationMethod.LesserThan, _percentageOfTotalPeriod);
@@ -155,8 +182,10 @@ public class InRangeComparison : INormCalculationMethod
         _rangeUnder = -1 * range;
         _percentageOfTotalPeriod = percentageOfTotalPeriod;
     }
-    public override CalculationResult Calculate(IEnumerable<decimal> samples, string? key = null)
+    public override CalculationResult Calculate(IEnumerable<decimal?> samplesNotFiltered, string? key = null)
     {
+        IEnumerable<decimal> samples;
+        if (!TryFilterSamples(samplesNotFiltered, out samples)) return CalculationResult.Failed("Niewystarczająca ilość danych", null);
         CalculationResult firstResult = Compare(samples, _rangeUnder, NormCalculationMethod.GreaterThan, _percentageOfTotalPeriod);
         if (firstResult.Result == false) { return firstResult; }
         CalculationResult secondResult = Compare(samples, _rangeOver, NormCalculationMethod.LesserThan, _percentageOfTotalPeriod);
@@ -179,8 +208,10 @@ public class SimpleComparison : INormCalculationMethod
         _method = method;
         _percentageOfTotalPeriod = percentageOfTotalPeriod;
     }
-    public override CalculationResult Calculate(IEnumerable<decimal> samples, string? key = null)
+    public override CalculationResult Calculate(IEnumerable<decimal?> samplesNotFiltered, string? key = null)
     {
+        IEnumerable<decimal> samples;
+        if (!TryFilterSamples(samplesNotFiltered, out samples)) return CalculationResult.Failed("Niewystarczająca ilość danych", null);
         return Compare(samples, _compareValue, _method, _percentageOfTotalPeriod);
     }
 }

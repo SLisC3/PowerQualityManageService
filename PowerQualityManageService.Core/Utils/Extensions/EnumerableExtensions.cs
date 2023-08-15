@@ -15,4 +15,20 @@ public static class EnumerableExtensions
     {
         return items.Cast<decimal>().Select(x => Decimal.ToDouble(x)).ToArray();
     }
+
+    public static List<int> IndexesOf (this IEnumerable<object?> items, Func<object?, bool> condition) 
+    {
+        List<int> result = new List<int>();
+        for (int i = 0; i < items.Count(); i++)
+        {
+            if(condition(items.ElementAt(i)))
+                result.Add(i);
+        }
+        return result;
+    }
+
+    public static IEnumerable<T> ExceptByIndexes<T> (this IEnumerable<T> items, IEnumerable<int> indexes)
+    {
+        return items.Where((item, index) => !indexes.Contains(index));
+    }
 }

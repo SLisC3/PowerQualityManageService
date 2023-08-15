@@ -9,5 +9,8 @@ public class SqlDbContext : DbContext
 
 	}
 
-	public DbSet<Template> Templates { get; set; }
+	public DbSet<TemplateSQL> Templates { get; set; }
+    public DbSet<ReportSQL> Reports { get; set; }
+    public DbSet<DataSamplesSQL> DataSamples_Single { get; set; }
+    public DbSet<MeasuringPointSQL> MeasuringPoints { get; set; }
 }

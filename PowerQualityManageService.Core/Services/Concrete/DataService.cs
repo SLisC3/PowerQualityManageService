@@ -23,7 +23,7 @@ public partial class DataService : IDataService
     {
         IEnumerable<DataSample>? samples = await _dataManagementRepository.GetDataSamples(startDate, endDate, measuringPoint);
         if (samples == null) { return null; }
-        var groupedSamples = samples.GroupBy(x => x.Date).Select(g => new { Date = g.Key, Data = g.SelectMany(x => x.Data!).Distinct().ToDictionary(kv => kv.Key, kv => kv.Value) });
+        var groupedSamples = samples.GroupBy(x => x.Date).Select(g => new { Date = g.Key, Flagging = g.Any(x => x.Flagging), Data = g.SelectMany(x => x.Data!).Distinct().ToDictionary(kv => kv.Key, kv => kv.Value) }).Where(x => !x.Flagging);
         Dictionary<string, IEnumerable<object?>> chosenValues = new Dictionary<string, IEnumerable<object?>>();
         foreach (string key in keys)
         {

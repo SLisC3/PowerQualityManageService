@@ -3,11 +3,11 @@
 
 }
 <script src="~/js/alerts.js"></script>
-<script src="~/js/table.js"></script>
+@*<script src="~/js/table.js"></script>*@
 <script src="~/js/loading.js"></script>
 
 <div class="text-center">
-    <h1 class="display-4">Podgląd</h1>
+    @*<h1 class="display-4">Podgląd</h1>*@
     <div class="container">
         <div class="row">
             <div id="alertPreview"></div>
@@ -52,7 +52,7 @@
                         </a>
                         Aby podejrzeć dane należy: <br />
                         1. Wybrać punkt pomiarowy, po kliknięciu pojawia się lista dostępnych<br />
-                        2. Wybrać date początku i końca danych
+                        2. Wybrać date początku i końca danych <br />
                         3. Wybrać opcję wyszukaj
                     </div>
                 </div>
@@ -77,6 +77,7 @@
 @section Scripts {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pl.js"></script>
     <script>
 
         //const Polish = require("flatpickr/dist/l10n/pl.ts");
@@ -85,6 +86,8 @@
 
         console.log(startDate)
         console.log(endDate)
+
+        flatpickr.localize(flatpickr.l10ns.pl);
 
         config = {
             enableTime: true,
@@ -153,6 +156,83 @@
             show.focus();
         }
     </script>
+    <script>
+        var id = '';
+        const overlay = document.getElementById('overlay');
+        const createNameForm = document.getElementById('CreateNameForm');
 
+        const acceptCreateNameButton = document.getElementById('acceptCreateName');
+        const closeCreateNameButton = document.getElementById('closeCreateName');
+
+        const val1 = document.getElementById('val1');
+        const val2 = document.getElementById('val2');
+        const val3 = document.getElementById('val3');
+
+        function openDropdowns() {
+
+            overlay.style.display = 'block';
+            createNameForm.style.display = 'block';
+        }
+
+        function updateConcatenatedValue(id) {
+            const concatenatedValuesInput = document.getElementById(id);
+            var combinedValue = '';
+            if (val1 !== null && val1.value !== undefined && val1.value !== '') {
+                combinedValue += val1.value;
+            }
+            if (val2 !== null && val2 !== undefined && val2.value !== '') {
+                combinedValue += '_';
+                combinedValue += val2.value;
+            }
+            if (val3 !== null && val3 !== undefined && val3.value !== '') {
+                combinedValue += '_';
+                combinedValue += val3.value;
+            }
+            console.log("UpdateValue")
+            console.log(val1.value)
+            console.log(val2.value)
+            console.log(val3.value)
+            concatenatedValuesInput.value = combinedValue;
+        }
+
+        acceptCreateNameButton.addEventListener('click', function () {
+            updateConcatenatedValue('inputValue')
+            overlay.style.display = 'none';
+            createNameForm.style.display = 'none';
+        });
+
+        closeCreateNameButton.addEventListener('click', function () {
+            overlay.style.display = 'none';
+            createNameForm.style.display = 'none';
+        });
+    </script>
+    <script>
+        function createTable(data, id) {
+            var table = document.createElement('table');
+            table.className = "table align-items-center mb-0";
+            // Tworzenie wiersza nagłówka
+            var head = table.createTHead().insertRow();
+            for (var key in data[0]) {
+                var th = document.createElement('th');
+                th.className = "text-columnHeader text-xs font-weight-bolder opacity-7 ps-2"
+                th.textContent = key;
+                head.appendChild(th);
+            }
+            // Tworzenie wierszy z danymi
+            var body = table.createTBody();
+            data.forEach(function (val) {
+                var row = body.insertRow();
+                for (var key in val) {
+                    var cell = row.insertCell();
+                    cell.className = "text-dark text-xs"
+                    cell.textContent = val[key];
+                }
+            });
+
+            // Dodanie tabeli do elementu HTML
+            var tableContainer = document.getElementById(id);
+            tableContainer.appendChild(table);
+        }
+    </script>
 }
 

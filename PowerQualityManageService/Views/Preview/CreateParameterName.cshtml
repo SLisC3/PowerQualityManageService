@@ -1,0 +1,84 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div id="overlay"></div>
+
+<div id="CreateNameForm" class="popup-form">
+    <h2>Wybierz parametr</h2>
+    <div class="p-4 bg-secondary">
+        <div class="row">
+            <div class="col-md-3"> </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select id="val1" class="form-control">
+                        <option value=null>Wskaż Typ</option>
+                        <option value="Date">Data i czas</option>
+                        <option value="Flagging">Flaga</option>
+                        <option value="Voltage">Napięcie</option>
+                        <option value="Current">Natężenie</option>
+                        <option value="Power">Moc</option>
+                        <option value="ApparentPower">Moc pozorna</option>
+                        <option value="UnbalancedVoltage">Niesymetryczne napięcie</option>
+                        <option value="UnbalancedCurrent">Niesymetryczny prąd </option>
+                        <option value="CosPhi">Cosinus kąta fazowego</option>
+                        <option value="TanPhi">Tangens kąta fazowego</option>
+                        <option value="QV">Jakość Napięcia</option>
+                        <option value="PF">Współczynnik mocy</option>
+                        <option value="HarmonicVoltage">Harmoniczne napięcia</option>
+                        <option value="THD">Całkowite zniekształcenia harmoczniczne</option>
+                        <option value="LongTermPercebilility">długoterminowa percepcyjność</option>
+                        <option value="ShortTermPercebilility">krótkoterminowa percepcyjność</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"> </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select id="val2" class="form-control">
+                        <option value=null>Wskaż rodzaj pomiaru</option>
+                        <option value=null>Nie dotyczy</option>
+                        <option value="Phase">Fazowe</option>
+                        <option value="PhaseToPhase">Międzyfazowe</option>
+                        <option value="Neutral">Żyły neutralnej</option>
+                        <option value="Total">Całkowite</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"> </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select id="val3" class="form-control">
+                        <option value=null>Wskaż rodzaj wartości</option>
+                        <option value=null>Nie dotyczy</option>
+                        <option value="Max">Maksymalna</option>
+                        <option value="Min">Minimalna</option>
+                        <option value="Abs">Wartość bezwzględna</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"> </div>
+        <div class="col-md-3">
+            <button id="acceptCreateName" class="btn btn-primary bg-gradient-primary btn-lg w-100" type="button">Zatwierdź</button>
+        </div>
+        <div class="col-md-3">
+            <button id="closeCreateName" class="btn btn-outline-primary btn-lg w-100" type="button">Anuluj</button>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+
+

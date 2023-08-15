@@ -6,6 +6,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
+
 public class DataManagementMongoDbRepository : IDataManagementDbRepository
 {
     private readonly IMongoCollection<DataSample> _dataSamples;
@@ -44,8 +45,9 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
 
     public async Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate, string measuringPoint)
     {
+
         var result = await _dataSamples
-            .FindAsync(x => x.Flagging == false && x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
+            .FindAsync(x => /*x.Flagging == false &&*/ x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
             
         if (result == null) { return null; }
         

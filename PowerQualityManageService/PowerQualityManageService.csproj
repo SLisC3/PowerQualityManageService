@@ -28,7 +28,10 @@
   <ItemGroup>
     <Folder Include="Reports\" />
     <Folder Include="Uploads\" />
-    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\img\AGH.png" />
   </ItemGroup>
 
   <ItemGroup>

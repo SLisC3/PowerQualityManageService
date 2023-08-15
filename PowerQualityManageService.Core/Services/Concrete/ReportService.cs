@@ -132,13 +132,30 @@ public class ReportService : IReportService
         return await MailSender.SendMail(model);
     }
 
+    private GetSamplesModel FilterSamples(GetSamplesModel samplesWithDataLabels, IEnumerable<string> samplesName)
+    {
+        var filteredSamples = new Dictionary<string, IEnumerable<object?>>();
+        IEnumerable<int> idx= new List<int>();
+
+        foreach (var sampleName in samplesName)
+            idx = idx.Concat(samplesWithDataLabels.Samples[sampleName].IndexesOf(x => x == null));
+
+        idx = idx.Distinct();
+        foreach(var sampleName in samplesName)
+        {
+            filteredSamples.Add(sampleName, samplesWithDataLabels.Samples[sampleName].ExceptByIndexes(idx));
+        }
+
+        return new GetSamplesModel() { DataLabels = samplesWithDataLabels.DataLabels.ExceptByIndexes(idx), Samples = filteredSamples! };
+    }
     private List<ChartData> PrepareCharts(IEnumerable<ChartDataDefinition> charts, GetSamplesModel samplesWithDatalabels)
     {
         List<ChartData> results = new List<ChartData>();
         foreach (ChartDataDefinition chart in charts)
         {
-            var signals = chart.SamplesName.ToDictionary(l => l, l => samplesWithDatalabels.Samples[l].ToDoubleArray());
-            results.Add(new ChartData() { Name = chart.Name, DateLabels = samplesWithDatalabels.DataLabels, Data = signals });
+            var filteredSamples = FilterSamples(samplesWithDatalabels, chart.SamplesName);
+            var signals = chart.SamplesName.ToDictionary(l => l, l => filteredSamples.Samples[l].ToDoubleArray());
+            results.Add(new ChartData() { Name = chart.Name, DateLabels = filteredSamples.DataLabels, Data = signals });
         }
         return results;
     }
@@ -148,7 +165,7 @@ public class ReportService : IReportService
         List<SingleNormResult> results = new List<SingleNormResult>();
         foreach (SingleNormDefinition norm in norms)
         {
-            norm.Samples =norm.SamplesName.ToDictionary(l => l, l => samplesWithDatalabels.Samples[l].Cast<decimal>());
+            norm.Samples =norm.SamplesName.ToDictionary(l => l, l => samplesWithDatalabels.Samples[l].Cast<decimal?>());
             var result = NormResultCalculator.Calculate(norm).ToList();
             
             if (norm.Name.Equals("4b"))
@@ -160,17 +177,17 @@ public class ReportService : IReportService
                     if(i % 3 == 0 && s1)
                     {
                         s1 = s1 && result[i].Result;
-                        if(!s1) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 1", Success = false, Message = $"Norma niespełniona dla {(int) it/3 + 1}" });
+                        if(!s1) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 1", Success = false, Message = $"Norma niespełniona dla harmonicznej nr {(int) it/3 + 1}. {result.ElementAt(i).ErrorMessage}" });
                     }
                     if (i % 3 == 1 && s2)
                     {
                         s2 = s2 && result[i].Result;
-                        if (!s2) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 2", Success = false, Message = $"Norma niespełniona dla {(int)it / 3 + 1}" });
+                        if (!s2) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 2", Success = false, Message = $"Norma niespełniona dla harmonicznej nr {(int)it / 3 + 1}. {result.ElementAt(i).ErrorMessage}" });
                     }
                     if (i % 3 == 2 && s3)
                     {
                         s3 = s3 && result[i].Result;
-                        if (!s3) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 3", Success = false, Message = $"Norma niespełniona dla {(int)it / 3 + 1}" });
+                        if (!s3) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 3", Success = false, Message = $"Norma niespełniona dla harmonicznej nr{(int)it / 3 + 1}. {result.ElementAt(i).ErrorMessage}" });
                     }
                     it++;
                 }
@@ -183,6 +200,11 @@ public class ReportService : IReportService
                 var it = 1;
                 foreach (var res in result)
                 {
+                    if(result.Count()==1)
+                    {
+                        results.Add(new SingleNormResult() { Name = norm.Name , Success = res.Result, Message = res.ErrorMessage });
+                        continue;
+                    }
                     results.Add(new SingleNormResult() { Name = norm.Name + $" Faza {it}", Success = res.Result, Message = res.ErrorMessage});
                     it++;
                 }
