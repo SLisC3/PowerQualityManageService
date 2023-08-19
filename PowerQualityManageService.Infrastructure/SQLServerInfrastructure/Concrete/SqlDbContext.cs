@@ -13,4 +13,5 @@ public class SqlDbContext : DbContext
     public DbSet<ReportSQL> Reports { get; set; }
     public DbSet<DataSamplesSQL> DataSamples_Single { get; set; }
     public DbSet<MeasuringPointSQL> MeasuringPoints { get; set; }
+    public DbSet<DataSamplesSQL_Header> DataSamples_Header { get; set; }
 }

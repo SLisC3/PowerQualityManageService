@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AutoMapper;
+using PowerQualityManageService.Core.PDFGenerator.PageModels;
+using PowerQualityManageService.Model.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -23,5 +26,19 @@ public static class CommonMappings
             }
         }
         return obj;
+    }
+
+    public static IEnumerable<DataSamplesSQL_Header> MapListDataSampleToHeader(this IEnumerable<DataSampleId> dataSamples, int measuringPointId)
+    {
+        var configExpression = new MapperConfigurationExpression();
+        configExpression.AddProfile<DataSampleProfile>();
+        var config = new MapperConfiguration(configExpression);
+        var mapper = new Mapper(config);
+        var result = mapper.Map<IEnumerable<DataSamplesSQL_Header>>(dataSamples);
+        foreach (var item in result)
+        {
+            item.MeasuringPoints_Id= measuringPointId;
+        }
+        return result;
     }
 }

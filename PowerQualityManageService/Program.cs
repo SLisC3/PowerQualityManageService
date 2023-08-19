@@ -16,9 +16,13 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
+
 // Add services/repos.
-builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
+builder.Services.AddScoped<IDataManagementDbRepository, DataManagementHybridRepository>();
+//builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
+//builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbWithIdsRepository>();
 //builder.Services.AddScoped<IDataManagementDbRepository, DataManagementSQLRepository>();
+
 builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();

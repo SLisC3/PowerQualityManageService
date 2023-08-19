@@ -1,14 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using PowerQualityManageService.Core.Helpers.ExplicitMappings;
 using PowerQualityManageService.Core.Repositories.Abstract;
+using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
 using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
 using PowerQualityManageService.Model.Models;
+using SkiaSharp;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
-
 public class DataManagementSQLRepository : IDataManagementDbRepository
 {
     private readonly SqlDbContext _context;
@@ -25,6 +27,14 @@ public class DataManagementSQLRepository : IDataManagementDbRepository
 
     public async Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate, string measuringPoint)
     {
+
+//-------------------------------------------------------------------------------
+#if DEBUG
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+#endif
+//-------------------------------------------------------------------------------
+
         try
         {
             int measuringPointId = await GetMeasuringPointId(measuringPoint);
@@ -34,6 +44,15 @@ public class DataManagementSQLRepository : IDataManagementDbRepository
                 .ToListAsync();
 
             var groupedSamples = samples.GroupBy(x => x.Date).Select(g => new { Date = g.Key, Data = g.SelectMany(x => x.Data!).Distinct().ToDictionary(kv => kv.Key, kv => kv.Value) }).ToList();
+
+//-------------------------------------------------------------------------------
+#if DEBUG
+            stopwatch.Stop();
+            Console.WriteLine("[SQL] Czas wyciągania Sampli:  " + stopwatch.Elapsed);
+            stopwatch.Restart();
+            stopwatch.Start();
+#endif
+//-------------------------------------------------------------------------------
 
             if (groupedSamples.Count == 0) { return null; }
             Dictionary<string, object> columns = groupedSamples.First().Data;
@@ -56,6 +75,15 @@ public class DataManagementSQLRepository : IDataManagementDbRepository
                 }
                 dataTable.Rows.Add(row);
             }
+
+//-------------------------------------------------------------------------------
+#if DEBUG
+            stopwatch.Stop();
+            Console.WriteLine("[SQL] Czas Tworzenia DataTable:  " + stopwatch.Elapsed);
+            stopwatch.Restart();
+            stopwatch.Start();
+#endif
+//-------------------------------------------------------------------------------
 
             return dataTable;
         }
@@ -108,7 +136,7 @@ public class DataManagementSQLRepository : IDataManagementDbRepository
 //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[REL] Czas Tworzenia Sampli:  " + stopwatch.Elapsed);
+        Console.WriteLine("[SQL] Czas Tworzenia Sampli:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif
@@ -120,7 +148,7 @@ public class DataManagementSQLRepository : IDataManagementDbRepository
 //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[REL] Czas Zapisu w bazie:  " + stopwatch.Elapsed);
+        Console.WriteLine("[SQL] Czas Zapisu w bazie:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif

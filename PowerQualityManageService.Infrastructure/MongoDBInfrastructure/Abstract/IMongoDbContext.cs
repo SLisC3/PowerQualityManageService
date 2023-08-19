@@ -7,6 +7,7 @@ public interface IMongoDbContext
 {
     public bool IsMongoActive();
     IMongoCollection<DataSample> DataSamples {get;}
+    IMongoCollection<DataSampleId> DataSamplesId { get; }
     IMongoCollection<Template> Templates{ get; }
     IMongoCollection<Report> Reports { get; }
 }

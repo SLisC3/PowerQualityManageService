@@ -251,3 +251,13 @@ public class DataSamplesSQL
     public decimal? THD_Phase3 { get; set; }
     public string? OTHERS { get; set; }
 }
+
+public class DataSamplesSQL_Header
+{
+    [Key]
+    public int DataSample_Id { get; set; }
+    public DateTime Date { get; set; }
+    public bool Flagging { get; set; }
+    public int MeasuringPoints_Id { get; set; }
+    public string Data_Id {get;set;}
+}

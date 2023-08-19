@@ -5,15 +5,16 @@ using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using MongoDB.Bson;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 
-public class DataManagementMongoDbRepository : IDataManagementDbRepository
+public class DataManagementMongoDbWithIdsRepository : IDataManagementDbRepository
 {
-    private readonly IMongoCollection<DataSample> _dataSamples;
-    public DataManagementMongoDbRepository(IMongoDbContext mongoDbContext)
+    private readonly IMongoCollection<DataSampleId> _dataSamples;
+    public DataManagementMongoDbWithIdsRepository(IMongoDbContext mongoDbContext)
     {
-        _dataSamples = mongoDbContext.DataSamples;
+        _dataSamples = mongoDbContext.DataSamplesId;
     }
 
     public async Task<int> InsertDataFromDataTable(DataTable dt, string measuringPoint)
@@ -28,8 +29,8 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         stopwatch.Start();
 #endif
         //-------------------------------------------------------------------------------
-        var samples = new List<DataSample>();
-        foreach(DataRow dr in dt.Rows)
+        var samples = new List<DataSampleId>();
+        foreach (DataRow dr in dt.Rows)
         {
             var dictionary = dr.Table.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => dr[col.ColumnName]);
             DateTime date = (DateTime)dictionary["Date"];
@@ -37,18 +38,21 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
             bool flagging = !string.IsNullOrEmpty((string?)dictionary["Flagging"]);
             dictionary.Remove("Flagging");
 
-            var sample = new DataSample { 
-                MeasuringPoint= measuringPoint,
-                Date = date, 
+            var sample = new DataSampleId
+            {
+                Id = ObjectId.GenerateNewId(),
+                MeasuringPoint = measuringPoint,
+                Date = date,
                 Flagging = flagging,
-                Data = dictionary };
+                Data = dictionary
+            };
 
             samples.Add(sample);
         }
         //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[MONGO] Czas wyciągania Sampli:  " + stopwatch.Elapsed);
+        Console.WriteLine("[MONGO_ID] Czas Tworzenia Sampli:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif
@@ -57,7 +61,7 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[MONGO] Czas Zapisu w bazie:  " + stopwatch.Elapsed);
+        Console.WriteLine("[MONGO_ID] Czas Zapisu w bazie:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif
@@ -70,9 +74,9 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
 
         var result = await _dataSamples
             .FindAsync(x => /*x.Flagging == false &&*/ x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
-            
+
         if (result == null) { return null; }
-        
+
         return await result.ToListAsync();
     }
 
@@ -86,13 +90,13 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
 #endif
 //-------------------------------------------------------------------------------
 
-        var samples = await  _dataSamples.FindAsync(x => x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
+        var samples = await _dataSamples.FindAsync(x => x.Date >= startDate && x.Date <= endDate && x.MeasuringPoint == measuringPoint);
         var groupedSamples = samples.ToEnumerable().GroupBy(x => x.Date).Select(g => new { Date = g.Key, Data = g.SelectMany(x => x.Data!).Distinct().ToDictionary(kv => kv.Key, kv => kv.Value) }).ToList();
 
 //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[MONGO] Czas Tworzenia Sampli:  " + stopwatch.Elapsed);
+        Console.WriteLine("[MONGO_ID] Czas wyciągania Sampli:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif
@@ -104,11 +108,11 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
         DataTable dt = new DataTable();
 
         dt.Columns.Add("Date");
-        foreach(KeyValuePair<string,object> kv in columns)
+        foreach (KeyValuePair<string, object> kv in columns)
         {
             dt.Columns.Add(kv.Key);
         }
-        
+
         foreach (var item in groupedSamples)
         {
             item.Data.Add("Date", item.Date);
@@ -123,7 +127,7 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
 //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[MONGO] Czas Tworzenia DataTable:  " + stopwatch.Elapsed);
+        Console.WriteLine("[MONGO_ID] Czas Tworzenia DataTable:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif
@@ -134,7 +138,7 @@ public class DataManagementMongoDbRepository : IDataManagementDbRepository
 
     public async Task<List<string>> GetMeasuringPoints()
     {
-        return _dataSamples.AsQueryable().Select(x=>x.MeasuringPoint).Distinct().ToList();
+        return _dataSamples.AsQueryable().Select(x => x.MeasuringPoint).Distinct().ToList();
     }
 
     public async Task<(DateTime, DateTime)> GetStartEndDate()
