@@ -1,7 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using PowerQualityManageService.Core.PDFGenerator;
-using PowerQualityManageService.Core.PDFGenerator.PageModels;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Core.Repositories.Concrete;
 using PowerQualityManageService.Core.Services.Abstract;
@@ -10,7 +7,6 @@ using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Concrete;
 using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
 using QuestPDF.Infrastructure;
-using QuestPDF.Previewer;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 
 // Add services/repos.
-builder.Services.AddScoped<IDataManagementDbRepository, DataManagementHybridRepository>();
+//builder.Services.AddScoped<IDataManagementDbRepository, DataManagementHybridRepository>();
+builder.Services.AddScoped<IDataManagementDbRepository, DataManagementSQLRepository>();
 //builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbRepository>();
 //builder.Services.AddScoped<IDataManagementDbRepository, DataManagementMongoDbWithIdsRepository>();
-//builder.Services.AddScoped<IDataManagementDbRepository, DataManagementSQLRepository>();
 
 builder.Services.AddScoped<IDataAcquisitionRepository, DataAcquisitionRepository>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();

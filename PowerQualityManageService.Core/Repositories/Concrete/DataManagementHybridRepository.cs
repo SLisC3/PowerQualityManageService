@@ -8,18 +8,17 @@ using PowerQualityManageService.Infrastructure.SQLServerInfrastructure.Concrete;
 using PowerQualityManageService.Model.Models;
 using System.Data;
 using System.Diagnostics;
-using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace PowerQualityManageService.Core.Repositories.Concrete;
 
 public class DataManagementHybridRepository : IDataManagementDbRepository
 {
     private readonly SqlDbContext _sqlContext;
-    private readonly IMongoCollection<DataSampleId> _dataSamplesId;
+    private readonly IMongoCollection<DataSampleId> _dataSamplesIdHybrid;
     public DataManagementHybridRepository(SqlDbContext sqlContext, IMongoDbContext mongoDbContext)
     {
         _sqlContext = sqlContext ?? throw new ArgumentNullException(nameof(sqlContext));
-        _dataSamplesId = mongoDbContext.DataSamplesId;
+        _dataSamplesIdHybrid = mongoDbContext.DataSamplesIdHybrid;
     }
     public async Task<IEnumerable<DataSample>?> GetDataSamples(DateTime startDate, DateTime endDate, string measuringPoint)
     {
@@ -28,7 +27,7 @@ public class DataManagementHybridRepository : IDataManagementDbRepository
         var filterDef = new FilterDefinitionBuilder<DataSampleId>();
         var filter = filterDef.In(x => x.Id, headers);
 
-        var result = await _dataSamplesId.FindAsync(filter);
+        var result = await _dataSamplesIdHybrid.FindAsync(filter);
         if (result == null) { return null; }
         return result.ToEnumerable();
     }
@@ -48,7 +47,7 @@ public class DataManagementHybridRepository : IDataManagementDbRepository
         var filterDef = new FilterDefinitionBuilder<DataSampleId>();
         var filter = filterDef.In(x => x.Id, headers);
 
-        var samples = await _dataSamplesId.FindAsync(filter);
+        var samples = await _dataSamplesIdHybrid.FindAsync(filter);
 
         var groupedSamples = samples.ToEnumerable().GroupBy(x => x.Date).Select(g => new { Date = g.Key, Data = g.SelectMany(x => x.Data!).Distinct().ToDictionary(kv => kv.Key, kv => kv.Value) }).ToList();
 
@@ -56,7 +55,7 @@ public class DataManagementHybridRepository : IDataManagementDbRepository
 //-------------------------------------------------------------------------------
 #if DEBUG
         stopwatch.Stop();
-        Console.WriteLine("[HYBRID] Czas Tworzenia Sampli:  " + stopwatch.Elapsed);
+        Console.WriteLine("[HYBRID] Czas wyciągania Sampli:  " + stopwatch.Elapsed);
         stopwatch.Restart();
         stopwatch.Start();
 #endif
@@ -160,7 +159,7 @@ stopwatch.Stop();
 
         await _sqlContext.DataSamples_Header.AddRangeAsync(samplesSql);
         await _sqlContext.SaveChangesAsync();
-        await _dataSamplesId.InsertManyAsync(samplesMongo.AsEnumerable());
+        await _dataSamplesIdHybrid.InsertManyAsync(samplesMongo.AsEnumerable());
 
         //-------------------------------------------------------------------------------
 #if DEBUG

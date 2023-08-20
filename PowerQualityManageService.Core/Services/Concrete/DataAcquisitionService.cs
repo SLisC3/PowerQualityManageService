@@ -54,7 +54,7 @@ public class DataAcquisitionService : IDataAcquisitionService
             int insertedRows = 0;
             while (stream.Position < stream.Length)
             {
-                DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 5000); // TODO take from config number of rows 
+                DataTable dt = await _localRepository.ReadRowsNoDispose(stream, headers, 50000); // TODO take from config number of rows 
                 insertedRows += await _dbRepository.InsertDataFromDataTable(dt, measuringPoint);
                 dt.Dispose();
             }
