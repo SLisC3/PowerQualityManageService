@@ -56,11 +56,11 @@ public class ResultPage : IBasePage
         {
             row.RelativeItem().Column(column =>
             {
-                column
-                    .Item()
-                    .AlignCenter()
-                    .Text(ResourceHelper.Instance.GetString("Compliance"))
-                    .Style(semiTitleStyle);
+                //column
+                //    .Item()
+                //    .AlignCenter()
+                //    .Text(ResourceHelper.Instance.GetString("Compliance"))
+                //    .Style(semiTitleStyle);
                 column
                     .Spacing(5);
                 column

@@ -177,17 +177,17 @@ public class ReportService : IReportService
                     if(i % 3 == 0 && s1)
                     {
                         s1 = s1 && result[i].Result;
-                        if(!s1) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 1", Success = false, Message = $"Norma niespełniona dla harmonicznej nr {(int) it/3 + 1}. {result.ElementAt(i).ErrorMessage}" });
+                        if(!s1) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 1", Success = false, Message = $"Kryterium niespełnione dla harmonicznej nr {(int) it/3 + 1}. {result.ElementAt(i).ErrorMessage}" });
                     }
                     if (i % 3 == 1 && s2)
                     {
                         s2 = s2 && result[i].Result;
-                        if (!s2) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 2", Success = false, Message = $"Norma niespełniona dla harmonicznej nr {(int)it / 3 + 1}. {result.ElementAt(i).ErrorMessage}" });
+                        if (!s2) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 2", Success = false, Message = $"Kryterium niespełnione dla harmonicznej nr {(int)it / 3 + 1}. {result.ElementAt(i).ErrorMessage}" });
                     }
                     if (i % 3 == 2 && s3)
                     {
                         s3 = s3 && result[i].Result;
-                        if (!s3) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 3", Success = false, Message = $"Norma niespełniona dla harmonicznej nr{(int)it / 3 + 1}. {result.ElementAt(i).ErrorMessage}" });
+                        if (!s3) results.Add(new SingleNormResult() { Name = norm.Name + $" Faza 3", Success = false, Message = $"Kryterium niespełnione dla harmonicznej nr{(int)it / 3 + 1}. {result.ElementAt(i).ErrorMessage}" });
                     }
                     it++;
                 }

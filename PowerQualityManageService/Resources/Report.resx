@@ -151,7 +151,7 @@
     <value>Brak danych</value>
   </data>
   <data name="Norm" xml:space="preserve">
-    <value>Nr normy</value>
+    <value>Nr kryterium</value>
   </data>
   <data name="Norm1" xml:space="preserve">
     <value>1)   Wartośc średnia częstotliwości mierzonej przez 10 sekund w miejsach przyłączenia powinna być zawarta w przedziale:</value>
@@ -184,7 +184,7 @@
     <value>6)   Warunkiem utrzymania parametrów napięcia zasilającego w granicach określonych w pkt 1—5 jest pobieranie przez odbiorcę mocy nie większej od mocy umownej, przy współczynniku tg fi nie większym niż 0,4</value>
   </data>
   <data name="Norms" xml:space="preserve">
-    <value>Normy</value>
+    <value>Kryteria oceny jakości napięcia</value>
   </data>
   <data name="Ordinance" xml:space="preserve">
     <value>Poprawność parametrów energii elektrycznej jest opracowana na podstawie rozporządzenia ministra gospodarki z dnia 4 maja 2077r. w sprawie szczegółowych warunków funkcjonowania systemu elektroenergetycznego. Dziennik Ustaw Nr 93 Poz. 623.</value>

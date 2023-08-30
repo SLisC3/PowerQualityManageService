@@ -160,7 +160,7 @@ namespace PowerQualityManageService.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nr normy.
+        ///   Looks up a localized string similar to Nr kryterium.
         /// </summary>
         internal static string Norm {
             get {
@@ -259,7 +259,7 @@ namespace PowerQualityManageService.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Normy.
+        ///   Looks up a localized string similar to Kryteria oceny jakości napięcia.
         /// </summary>
         internal static string Norms {
             get {

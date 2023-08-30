@@ -35,13 +35,13 @@ public abstract class INormCalculationMethod
                 decimal allCount1 = (decimal)samples.Count();
                 decimal percentageGreatherThan = correctCount1 / allCount1 * 100;
                 if (percentageGreatherThan >= percentageOfTotalPeriod) return CalculationResult.Passed(percentageGreatherThan);
-                else return CalculationResult.Failed("Zbyt dużo próbek poniżej wartości normy", percentageGreatherThan);
+                else return CalculationResult.Failed("Zbyt dużo próbek poniżej wartości dopuszczalnej", percentageGreatherThan);
             case NormCalculationMethod.LesserThan:
                 decimal correctCount2 = (decimal)samples.Where(x => x <= compareValue).Count();
                 decimal allCount2 = (decimal)samples.Count();
                 decimal percentageLesserThan = correctCount2 / allCount2 * 100;
                 if (percentageLesserThan >= percentageOfTotalPeriod) return CalculationResult.Passed(percentageLesserThan);
-                else return CalculationResult.Failed("Zbyt dużo próbek powyżej wartości normy", percentageLesserThan);
+                else return CalculationResult.Failed("Zbyt dużo próbek powyżej wartości dopuszczalnej", percentageLesserThan);
             default:
                 return CalculationResult.Failed("Błędna metoda", null);
         }
