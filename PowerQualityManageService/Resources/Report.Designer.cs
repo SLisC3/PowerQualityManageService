@@ -97,6 +97,15 @@ namespace PowerQualityManageService.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zgodność z kryteriami.
+        /// </summary>
+        internal static string CriteriaResults {
+            get {
+                return ResourceManager.GetString("CriteriaResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wygenerowano: .
         /// </summary>
         internal static string Date {

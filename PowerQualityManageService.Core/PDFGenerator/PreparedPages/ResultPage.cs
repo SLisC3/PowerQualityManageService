@@ -11,17 +11,34 @@ namespace PowerQualityManageService.Core.PDFGenerator.PreparedPages;
 public class ResultPage : IBasePage
 {
     private readonly ResultPageModel _model;
+    private bool _isGraph;
 
     public ResultPage(ResultPageModel model)
     {
         _model = model;
-     }
+        _isGraph = false;
+    }
     public override IDocumentContainer Compose(IDocumentContainer container)
     {
-        return container.Page(page =>
+        container.Page(page =>
         {
             page
                 .Margin(50);
+            page
+                .Header()
+                .Element(ComposeHeader);
+            page
+                .Content()
+                .Element(ComposeContent);
+            page
+                .Footer()
+                .Element(ComposeFooter);
+        });
+        _isGraph = true;
+        return container.Page(page =>
+        {
+            page
+               .Margin(50);
             page
                 .Header()
                 .Element(ComposeHeader);
@@ -61,23 +78,34 @@ public class ResultPage : IBasePage
                 //    .AlignCenter()
                 //    .Text(ResourceHelper.Instance.GetString("Compliance"))
                 //    .Style(semiTitleStyle);
-                column
-                    .Spacing(5);
-                column
-                    .Item()
-                    .Element(ComposeTable);
-                column
-                    .Spacing(10);
-                column
-                    .Item()
-                    .AlignCenter()
-                    .Text(ResourceHelper.Instance.GetString("Graphs")) 
-                    .Style(semiTitleStyle);
-                column
-                    .Spacing(5);
-                column
-                    .Item()
-                    .Element(ComposeChart);
+                if (!_isGraph)
+                {
+                    column
+                        .Item()
+                        .AlignCenter()
+                        .Text(ResourceHelper.Instance.GetString("CriteriaResults"))
+                        .Style(semiTitleStyle);
+                    column
+                        .Spacing(5);
+                    column
+                        .Item()
+                        .Element(ComposeTable);
+                    column
+                        .Spacing(10);
+                }
+                if (_isGraph)
+                {
+                    column
+                        .Item()
+                        .AlignCenter()
+                        .Text(ResourceHelper.Instance.GetString("Graphs"))
+                        .Style(semiTitleStyle);
+                    column
+                        .Spacing(5);
+                    column
+                        .Item()
+                        .Element(ComposeChart);
+                }
 
             });
         });

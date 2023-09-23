@@ -11,7 +11,7 @@ public class ChartGenerator
         stopwatch.Start();
 #endif
         // Config
-        var plt = new ScottPlot.Plot(1466, 1000);
+        var plt = new ScottPlot.Plot(1440, 900);
         var colors = new Queue<System.Drawing.Color>();
         colors.Enqueue(System.Drawing.Color.RoyalBlue);
         colors.Enqueue(System.Drawing.Color.Firebrick);

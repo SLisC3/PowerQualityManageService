@@ -29,7 +29,7 @@ public class DataManagementHybridRepository : IDataManagementDbRepository
 
         var result = await _dataSamplesIdHybrid.FindAsync(filter);
         if (result == null) { return null; }
-        return result.ToEnumerable();
+        return result.ToList();
     }
 
     public async Task<DataTable?> GetDataSamplesDT(DateTime startDate, DateTime endDate, string measuringPoint)

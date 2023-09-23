@@ -7,6 +7,12 @@
 @*<script src="~/js/table.js"></script>*@
 @*<script src="~/js/loading.js"></script>*@
 <script src="~/js/buttons.js"></script>
+<style>
+    /* Styl dla zaznaczonego wiersza */
+    .selected {
+        background-color: gray;
+    }
+</style>
 <div class="text-center">
     @*<h1 class="display-4">Raporty</h1>*@
     <div class="container">
@@ -107,6 +113,8 @@
         window.onload = function () {
             CreateSelectableTable();
             console.log("Wstpne ladowanie zakonczone")
+            AddActionToTable();
+            console.log("Dodano akcje")
         }
     </script>
     <script>
@@ -138,6 +146,7 @@
     <script>
         function CreateSelectableTable() {
             var table = document.createElement('table');
+            table.id = "reportsTable";
             table.className = "table align-items-center mb-0";
             // Tworzenie wiersza nagłówka
             var head = document.createElement("thead");
@@ -210,34 +219,46 @@
         });
     </script>
     <script>
-        $(document).ready(function () {
-            console.log("Dokument ready")
-            $('.selectable-row').click(function () {
-                console.log("Kliknieto wiersz")
-                // Usuń klasę zaznaczenia z innych wierszy
-                $('.selectable-row').removeClass('selected');
-                $('.selectable-row').css('background-color', '');;
+        function AddActionToTable() {
+            console.log('Dodaj akcję');
+            // Pobierz wszystkie wiersze tabeli
+            var table = document.getElementById("reportsTable");
+            console.log(table)
+            var rows = table.getElementsByClassName("selectable-row");
 
-                // Dodaj klasę zaznaczenia do klikniętego wiersza
-                $(this).addClass('selected');
-                $(this).css('background-color', 'gray');
-
-                // Pobierz dane z zaznaczonego wiersza i wykorzystaj je w funkcji
-                currentReport = $(this).find('td:first').text() - 1;
-                console.log("Current", currentReport)
-                var rowData = $(this).text();
-                myFunction(rowData);
-            });
-            });
-
-
-        function myFunction(data) {
+            // Dodaj obsługę kliknięcia dla każdego wiersza
+            for (var i = 0; i < rows.length; i++) {
+                console.log('Wiesz :', i);
+                rows[i].addEventListener('click', function () {
+                    rowClicked(rows, this)
+                });
+            }
+        }
+    </script>
+    <script>
+        function rowClicked(rows, row) {
+            console.log(rows)
+            console.log(row)
             // Wykonaj operacje na danych z zaznaczonego wiersza
+            for (var j = 0; j < rows.length; j++) {
+                rows[j].classList.remove("selected");
+            }
+
+            // Dodaj klasę 'selected' do klikniętego wiersza
+            var cells = row.getElementsByTagName('td');
+            if (cells.length > 0) {
+                // Pobierz tekst z pierwszej komórki
+                var firstVal = cells[0].textContent; // lub cells[0].innerText
+                console.log('Pierwsza wartość w wierszu: ' + firstVal)
+                currentReport = firstVal-1;
+            }
+            row.classList.add("selected");
+            console.log('Id wybranego : ' + currentReport);
             unhideBtn('previewButton')
             unhideBtn('downloadButton')
             unhideBtn('sendMailButton')
             unhideBtn('deleteButton')
-            console.log('Zaznaczono wiersz: ' + data);
+            console.log('Zaznaczono wiersz: ' + row);
         }
     </script>
 

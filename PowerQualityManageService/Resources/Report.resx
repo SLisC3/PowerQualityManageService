@@ -129,6 +129,9 @@
   <data name="CreatedBy" xml:space="preserve">
     <value>Przy użyciu : PowerQualityManger</value>
   </data>
+  <data name="CriteriaResults" xml:space="preserve">
+    <value>Zgodność z kryteriami</value>
+  </data>
   <data name="Date" xml:space="preserve">
     <value>Wygenerowano: </value>
   </data>
