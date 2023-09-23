@@ -25,7 +25,7 @@ public class ChartGenerator
 #endif
 
         // Prepare dates
-        double[] dates = data.DateLabels.Select(x => x.ToOADate()).ToArray();
+        double[] dates = data.DateLabels.Select(x => x.ToLocalTime().ToOADate()).ToArray();
 
 #if DEBUG
         stopwatch.Stop();
