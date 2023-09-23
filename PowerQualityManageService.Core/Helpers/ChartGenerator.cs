@@ -36,7 +36,7 @@ public class ChartGenerator
         // Add Signals
         foreach (KeyValuePair<string, double[]> kvp in data.Data)
         {
-            var sig = plt.AddScatter(dates, kvp.Value, lineWidth: 3, color: colors.Dequeue(), label: kvp.Key);
+            var sig = plt.AddScatter(dates, kvp.Value, lineWidth: 3, color: colors.Dequeue(), label: LanguageHelper.MapToPl(kvp.Key));
         }
         plt.XAxis.DateTimeFormat(true);
 

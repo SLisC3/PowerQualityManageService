@@ -47,7 +47,6 @@
                             onchange="if(this.options[this.selectedIndex].value=='customOption'){toggleField(this,'points2');this.selectedIndex='0';}" 
                             asp-for="MeasuringPoint" asp-items="@ViewBag.MeasuringPoints" class="form-control">
                             <option></option>
-                            <option value="customOption">[Wprowadź nowy punkt pomiarowy]</option>
                         </select>
                         <input asp-for="MeasuringPoint" id="points2" class="form-control" style="display:none;" onblur="if(this.value==''){toggleField(this,'points1');}">
                     </div>
