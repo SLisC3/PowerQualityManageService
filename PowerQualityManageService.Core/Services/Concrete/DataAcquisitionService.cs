@@ -34,6 +34,10 @@ public class DataAcquisitionService : IDataAcquisitionService
         List<ColumnHeader> headers = await _localRepository.GetHeaders(stream);
         _cache.Set(fileName + "Headers", headers);
         DataTable data = await _localRepository.ReadRows(stream,headers,5); // TODO take from config number of rows
+        for (int i = 0; i < data.Columns.Count; i++)
+        {
+            data.Columns[i].ColumnName = LanguageHelper.MapToPl(data.Columns[i].ColumnName);
+        }
         return data;
     }
 

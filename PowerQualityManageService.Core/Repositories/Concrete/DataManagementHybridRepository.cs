@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using PowerQualityManageService.Core.Helpers;
 using PowerQualityManageService.Core.Helpers.ExplicitMappings;
 using PowerQualityManageService.Core.Repositories.Abstract;
 using PowerQualityManageService.Infrastructure.MongoDBInfrastructure.Abstract;
@@ -81,6 +82,11 @@ public class DataManagementHybridRepository : IDataManagementDbRepository
                 row[entry.Key] = entry.Value;
             }
             dt.Rows.Add(row);
+        }
+
+        for (int i = 0; i < dt.Columns.Count; i++)
+        {
+            dt.Columns[i].ColumnName = LanguageHelper.MapToPl(dt.Columns[i].ColumnName);
         }
 
 //-------------------------------------------------------------------------------

@@ -9,8 +9,8 @@ public static class LanguageHelper
 {
     public static string MapToPl(string origin)
     {
-        origin = origin.Replace("Phase", "Fazowe");
         origin = origin.Replace("PhaseToPhase", "Międzyfazowe");
+        origin = origin.Replace("Phase", "Fazowe");
         origin = origin.Replace("Total", "Całkowite");
         origin = origin.Replace("Neutral", "LiniiNeutralnej");
         origin = origin.Replace("Voltage", "Napięcie");
@@ -19,8 +19,10 @@ public static class LanguageHelper
         origin = origin.Replace("ApparentPower", "MocPozorna");
         origin = origin.Replace("UnbalancedVoltage", "NiesymetryczneNapięcie");
         origin = origin.Replace("UnbalancedCurrent", "NiesymetryczneNatężenie");
-        origin = origin.Replace("LongTermPercebilitty", "DługoterminowaPercepcyjność");
-        origin = origin.Replace("ShortTermPercebilitty", "KrótkoterminowaPercepcyjność");
+        origin = origin.Replace("LongTermPercebility", "DługoterminowaPercepcyjność");
+        origin = origin.Replace("ShortTermPercebility", "KrótkoterminowaPercepcyjność");
+        origin = origin.Replace("Date", "Data");
+        origin = origin.Replace("Flagging", "Wykluczona");
         return origin;
     }
     public static IEnumerable<string> MapToPlEnumerable(IEnumerable<string> origins)
